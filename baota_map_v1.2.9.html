@@ -1,0 +1,1947 @@
+<!doctype html>
+<!--
+  宝塔地图网页及文档制作者：zhuangshu <zhuangshu_nju@163.com>
+  规则来源：作者“大象的耳朵”的原创模组《万人无我》之“万法宝塔”规则。
+  代码说明：本网页代码由 ChatGPT 编写生成，并由网页制作者整理、修改、配置与发布。
+  请保留作者、规则来源及代码生成声明。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="author" content="zhuangshu" />
+<meta name="copyright" content="网页制作：zhuangshu；规则来源：《万人无我》原创模组作者“大象的耳朵”" />
+<meta name="generator" content="ChatGPT（代码编写生成），由 zhuangshu 整理、修改、配置与发布" />
+<title>宝塔地图 · CloudBase 实时共享</title>
+<style>
+  :root{--ink:#172033;--muted:#667085;--line:#e4e8ef;--panel:#fff;--bg:#f3f5f9;--navy:#18243a;--blue:#3677f5;--blue-soft:#eaf1ff;--teal:#0f9b8e;--amber:#d97706;--red:#c2414b;--shadow:0 10px 30px rgba(22,34,56,.07)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  .topbar{background:linear-gradient(115deg,#18243a,#233956);color:#fff;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:14px}.brand-mark{width:44px;height:44px;border-radius:13px;background:#fff1;display:grid;place-items:center;font-size:24px;border:1px solid #ffffff28}
+  h1{font-size:21px;margin:0 0 3px;font-weight:750;letter-spacing:.2px}.subtitle{color:#c6d1e2;font-size:12px}
+  .top-actions{display:flex;gap:8px;flex-wrap:wrap}.topbar button{border:1px solid #ffffff35;background:#ffffff12;color:#fff;padding:9px 12px;border-radius:9px}.topbar button:hover{background:#ffffff22}
+  .layout{max-width:1680px;margin:0 auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;align-items:stretch}.gm-tool-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr) minmax(0,1.2fr);grid-template-areas:"players playeredit turn" "move roomedit coord" "chase chase chase";gap:12px;align-items:start}.gm-tool-grid>.panel{min-width:0}.gm-tool-grid #playerListPanel{grid-area:players}.gm-tool-grid #playerEditPanel{grid-area:playeredit}.gm-tool-grid #movePanel{grid-area:move}.gm-tool-grid #turnPanel{grid-area:turn}.gm-tool-grid #roomEditPanel{grid-area:roomedit}.gm-tool-grid #coordToolsPanel{grid-area:coord}.gm-tool-grid #chaseAdminPanel{grid-area:chase}
+  .sidebar{display:flex;flex-direction:column;gap:14px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:15px 17px 11px;border-bottom:1px solid #edf0f5;display:flex;justify-content:space-between;align-items:center;gap:10px}.panel-head h2{font-size:14px;margin:0;font-weight:750}.panel-body{padding:16px 17px}.tiny{color:var(--muted);font-size:11px}
+  .player-list{display:flex;flex-direction:column;gap:7px}.player-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:9px;align-items:center;padding:9px 10px;border:1px solid #edf0f5;border-radius:11px;background:#fff;cursor:pointer;text-align:left;width:100%;color:var(--ink)}.player-row:hover{border-color:#b9cdfb;background:#f9fbff}.player-row.active{border-color:#87aafc;background:var(--blue-soft);box-shadow:inset 0 0 0 1px #c8d9ff}.avatar{display:grid;place-items:center;width:27px;height:27px;border-radius:9px;color:#fff;font-weight:800;font-size:11px}.player-main{min-width:0}.player-name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.player-pos{font-size:11px;color:var(--muted);white-space:nowrap}.dex{font-size:11px;color:#6c7586;background:#f1f3f7;border-radius:6px;padding:3px 6px}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}.field:last-child{margin-bottom:0}.field label{font-weight:700;font-size:12px;color:#394357}.field input,.field select{width:100%;border:1px solid #dbe1eb;border-radius:9px;background:#fff;padding:10px 11px;outline:none;color:var(--ink)}.field input:focus,.field select:focus{border-color:#7ca4ff;box-shadow:0 0 0 3px #3677f51c}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:1px solid transparent;border-radius:9px;padding:10px 12px;font-weight:700}.btn-primary{background:var(--blue);color:#fff;width:100%;box-shadow:0 4px 10px #3677f525}.btn-primary:hover{background:#2867dd}.btn-soft{background:#f4f6fa;border-color:#e2e7f0;color:#344054}.btn-soft:hover{background:#eaf0f8}.btn-danger{background:#fff4f4;border-color:#f5d0d0;color:#b4232e}.btnrow{display:flex;gap:8px}.btnrow .btn{flex:1}.help{margin:12px 0 0;padding:10px 11px;border-radius:9px;background:#f5f8ff;color:#51617c;font-size:11px;line-height:1.65;border:1px solid #e4ebff}
+  .maincol{min-width:0;display:flex;flex-direction:column;gap:14px}.map-toolbar{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.floor-tabs{display:flex;gap:6px;flex-wrap:wrap}.floor-tab{border:1px solid #dfe5ef;background:#fff;color:#536075;border-radius:8px;padding:8px 12px;font-weight:750;font-size:12px}.floor-tab.active{background:#1c2e49;color:#fff;border-color:#1c2e49}.floor-tab .count{margin-left:5px;opacity:.7;font-weight:500}.map-stats{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}.map-stats strong{color:var(--ink)}
+  .map-wrap{min-height:480px;position:relative;background-color:#fbfcfe;background-image:radial-gradient(#dfe5ef .8px,transparent .8px);background-size:18px 18px;overflow:auto}.map-canvas{min-height:480px;padding:24px;display:flex;align-items:center;justify-content:center}.map-canvas svg{display:block;max-width:none}.empty-map{border:1px dashed #cbd5e1;border-radius:14px;padding:45px 30px;text-align:center;color:#64748b;background:#ffffffcc;max-width:380px}.empty-map .symbol{font-size:36px;margin-bottom:8px}.map-foot{padding:10px 16px;border-top:1px solid #edf0f5;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:11px}
+  .bottom-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:14px}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:6px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}.door-line{width:21px;height:4px;background:#3677f5;border-radius:3px;display:inline-block}.log-list{display:flex;flex-direction:column;gap:9px;max-height:260px;overflow:auto}.log-item{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;font-size:12px}.log-time{color:#98a2b3;font-size:10px;padding-top:2px}.log-text{color:#4b5565}.log-text strong{color:#1f2937}.floor-links{display:flex;flex-direction:column;gap:8px}.link-row{background:#f7f9fc;border:1px solid #e7ebf2;border-radius:9px;padding:9px 10px;font-size:12px;color:#46546b}.link-row b{color:#27374f}.room-rule{font-size:12px;line-height:1.7;color:#5e6a7f}
+  .footer{text-align:center;font-size:11px;color:#8a94a6;padding:4px 12px 20px}
+  .turn-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+  .turn-metric{background:#f6f8fc;border:1px solid #e8edf5;border-radius:10px;padding:9px 10px;min-width:0}
+  .turn-metric .metric-label{font-size:10px;color:#7a879a}.turn-metric .metric-value{font-size:18px;font-weight:800;line-height:1.3;overflow-wrap:anywhere}
+  .player-row.current-turn{border-color:#0f9b8e;box-shadow:inset 0 0 0 1px #0f9b8e;background:#effbf8}.player-row.ap-done{background:#fafafa}.player-row.ap-done .player-name{color:#727d8f}
+  .turn-tag{display:inline-block;font-size:9px;border-radius:5px;padding:1px 4px;margin-left:4px;color:#047857;background:#d1fae5;vertical-align:middle}
+  .coord-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .inline-check{display:flex;gap:8px;align-items:center;font-size:12px;color:#475467;margin:8px 0 12px}.inline-check input{width:auto;flex:0 0 auto}
+  .ap-pill{font-size:10px;color:#175cd3;background:#eff8ff;border-radius:6px;padding:3px 5px;white-space:nowrap}
+  .small-muted{font-size:11px;color:#667085;line-height:1.65}
+  .shared-turn-panel .panel-body{padding:12px 16px}
+  .gm-tool-grid .panel-head{padding:11px 13px 9px}.gm-tool-grid .panel-body{padding:12px 13px}
+  #playerList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;max-height:178px;overflow:auto;padding-right:2px}
+  #playerList .player-row{grid-template-columns:26px minmax(0,1fr) auto;gap:6px;padding:7px 8px;min-width:0}
+  #playerList .avatar{width:25px;height:25px}.player-pos{overflow:hidden;text-overflow:ellipsis}
+  #playerListPanel .panel-body>p{margin-top:8px!important}
+  #playerEdit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:end}
+  #playerEdit .field,#roomEdit .field,#movePanel .field,#coordToolsPanel .field{margin:0;min-width:0}
+  #playerEdit>.tiny,#playerEdit>button{grid-column:1/-1}
+  #movePanel .panel-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+  #movePanel .field{margin:0}#movePanel .inline-check,#movePanel #moveBtn,#movePanel .help,#movePanel #moveStatus,#movePanel .btnrow{grid-column:1/-1}
+  #movePanel .help{margin:0}#movePanel .btnrow{margin-top:0!important}
+  #turnPanel .panel-body{padding:12px 13px}#turnPanel .turn-summary{gap:6px;margin-bottom:8px}
+  #turnPanel .turn-metric{padding:8px}#turnPanel .metric-value{font-size:16px}
+  #roomEdit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:end}
+  #roomEdit>.tiny,#roomEdit>.inline-check,#roomEdit>button{grid-column:1/-1}
+  #coordToolsPanel .panel-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+  #coordToolsPanel .coord-grid,#coordToolsPanel .inline-check,#coordToolsPanel .btnrow,#coordToolsPanel .help{grid-column:1/-1}
+  #coordToolsPanel .field{min-width:0}#coordToolsPanel .help{margin:0}
+  #coordToolsPanel .coord-grid{gap:7px}
+  .maincol{gap:12px}.map-toolbar{padding:10px 14px}.map-wrap,.map-canvas{min-height:420px}.map-canvas{padding:18px}
+  .maincol>.panel>.panel-head{padding:11px 15px 9px}.maincol>.panel>.panel-body{padding:12px 15px}
+  .shared-ap-roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+  .shared-ap-card{border:1px solid #e7ebf2;border-radius:9px;padding:9px 10px;background:#fafbfe;min-width:0}
+  .shared-ap-card.current{border-color:#0f9b8e;background:#effbf8}
+  .shared-ap-name{font-weight:750;overflow-wrap:anywhere}.shared-ap-meta{font-size:11px;color:#667085;margin-top:3px}
+  body:not(.viewer) #sharedTurnPanel{display:none}
+
+  @media(max-width:1180px){.gm-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"players playeredit" "turn move" "roomedit coord" "chase chase"}.bottom-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:760px){.gm-tool-grid{grid-template-columns:1fr 1fr;grid-template-areas:"players playeredit" "turn turn" "move move" "roomedit roomedit" "coord coord" "chase chase"}.bottom-grid{grid-template-columns:1fr}.map-wrap,.map-canvas{min-height:360px}}
+  @media(max-width:560px){.topbar{padding:18px}.layout{padding:10px;gap:10px}.gm-tool-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"players" "playeredit" "turn" "move" "roomedit" "coord" "chase"}.form-grid{grid-template-columns:1fr 1fr}.map-wrap,.map-canvas{min-height:320px}.brand-mark{display:none}.top-actions{width:100%}.top-actions button{flex:1}.map-toolbar{align-items:flex-start}#playerList{grid-template-columns:repeat(2,minmax(0,1fr));max-height:220px}}
+
+  .cloud-control{max-width:1560px;margin:16px auto 0;padding:0 20px}
+  .cloud-inner{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);padding:16px 18px}
+  .cloud-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .cloud-head h2{margin:0;font-size:15px}.cloud-status{font-size:12px;border-radius:999px;padding:5px 10px;background:#f2f4f7;color:#475467;max-width:100%;overflow-wrap:anywhere}
+  .cloud-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;align-items:end}
+  .cloud-control .field{margin:0}.cloud-control .field label{display:block}.cloud-control input,.cloud-control select{width:100%;border:1px solid #dbe1eb;border-radius:9px;background:#fff;padding:9px 10px;min-width:0}
+  .cloud-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.cloud-actions .btn{width:auto}.cloud-note{font-size:11px;color:#667085;line-height:1.65;margin:10px 0 0}.cloud-session{margin-top:12px;padding:12px;border-radius:11px;background:#f7f9fc;border:1px solid #e6ebf3}.cloud-session[hidden],.cloud-login[hidden]{display:none!important}.cloud-session-grid{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,1fr);gap:10px;align-items:end}.uid-value{overflow-wrap:anywhere;word-break:break-all;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#eef2f7;border-radius:7px;padding:8px;font-size:11px}.cloud-login{display:flex;gap:9px;align-items:end;flex-wrap:wrap;margin-top:12px}.cloud-login .field{flex:1;min-width:180px}.cloud-login .btn{width:auto}.cloud-error{color:#b42318}.cloud-success{color:#067647}
+  .mode-badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;background:#ffffff17;border:1px solid #ffffff30;color:#e7edf7;font-size:11px;white-space:nowrap}
+  .mode-overlay[hidden]{display:none!important}.mode-overlay{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:rgba(14,24,42,.72);backdrop-filter:blur(5px)}
+  .mode-dialog{width:min(760px,100%);background:#fff;border-radius:20px;box-shadow:0 28px 90px #0004;padding:clamp(20px,4vw,34px);border:1px solid #e7ebf2}
+  .mode-kicker{display:inline-flex;border-radius:999px;background:#eaf1ff;color:#245bc5;font-size:11px;font-weight:800;padding:5px 9px;margin-bottom:10px}
+  .mode-dialog h2{font-size:24px;line-height:1.25;margin:0 0 8px;color:#19263b}.mode-intro{font-size:13px;line-height:1.75;color:#667085;margin:0 0 20px}
+  .mode-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mode-option{border:1px solid #dfe5ef;border-radius:15px;padding:18px;text-align:left;background:#fff;color:#172033;min-width:0;transition:border-color .15s,transform .15s}.mode-option:hover{border-color:#7ca4ff;transform:translateY(-2px);background:#f9fbff}.mode-option .mode-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#edf3ff;color:#2f65d8;font-size:22px;margin-bottom:13px}.mode-option.dynamic .mode-icon{background:#e9f8f3;color:#087f68}.mode-option strong{display:block;font-size:16px;margin-bottom:7px}.mode-option p{font-size:12px;line-height:1.7;color:#667085;margin:0 0 12px}.mode-tag{display:inline-flex;font-size:10px;border-radius:6px;background:#f2f4f7;color:#475467;padding:4px 7px}.mode-option.dynamic .mode-tag{background:#e9f8f3;color:#087f68}.mode-dialog-foot{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;border-top:1px solid #edf0f5;margin-top:20px;padding-top:14px;font-size:11px;color:#8892a4}
+  .round-status{font-size:10px;display:inline-block;border-radius:6px;padding:2px 5px;background:#eef2f6;color:#5d687a;margin-top:3px;white-space:nowrap}.round-status.done{background:#fff2dc;color:#a45b08}.round-status.ready{background:#e9f8f3;color:#087f68}
+  body.static-mode .cloud-control{display:none!important}
+  body.static-mode #modeBadge{background:#ffffff17}
+  .player-row.ap-done{background:#fafafa}.player-row.ap-done .player-name{color:#727d8f}
+  body.readonly .layout{grid-template-columns:minmax(0,1fr)}
+  body.readonly .sidebar,body.readonly .gm-tool-grid{display:none!important}
+  body.readonly .top-actions #exportBtn,body.readonly .top-actions #importBtn,body.readonly .top-actions #resetBtn,body.readonly #importFile{display:none!important}
+  body.viewer .cloud-control{display:none!important}
+  body.viewer .gm-tool-grid{display:none!important}
+  body.viewer #sharedTurnPanel{display:block!important}
+  body.viewer #sharedTurnPanel .panel-body{display:block!important;padding:12px 15px}
+  body.viewer #sharedTurnPanel .turn-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 10px}
+  body.viewer #sharedAPRoster{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+  body.viewer #sharedTurnPanel .shared-ap-card{border-color:#75a99d;background:#eaf4ee;padding:10px 11px}
+  @media(max-width:760px){body.viewer #sharedTurnPanel .turn-summary{grid-template-columns:1fr 1fr}body.viewer #sharedTurnPanel .turn-metric:last-child{grid-column:1/-1}body.viewer #sharedAPRoster{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){body.viewer #sharedAPRoster{grid-template-columns:1fr}}
+  body.viewer .top-actions{display:none!important}
+  body.viewer .map-foot #autosaveText{font-weight:700}
+  @media(max-width:1000px){.cloud-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cloud-session-grid{grid-template-columns:1fr}}
+  @media(max-width:620px){.cloud-control{padding:0 12px;margin-top:12px}.cloud-inner{padding:13px}.cloud-grid{grid-template-columns:1fr}.cloud-login .field{min-width:100%}.cloud-actions .btn{flex:1}.mode-options{grid-template-columns:1fr}.mode-dialog h2{font-size:21px}.mode-dialog{padding:20px}.mode-option{padding:15px}}
+
+
+  .chase-alert{margin:14px auto 0;max-width:1640px;padding:0 20px}
+  .chase-alert-card{background:linear-gradient(120deg,#651111,#b42318 58%,#7a1717);color:#fff;border:1px solid #f04438;border-radius:16px;padding:18px 22px;box-shadow:0 12px 34px #b4231833;position:relative;overflow:hidden}
+  .chase-alert-card:after{content:"";position:absolute;right:-38px;top:-65px;width:220px;height:220px;border:22px solid #ffffff0e;border-radius:50%;pointer-events:none}
+  .chase-alert-kicker{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#ffd0cb;font-weight:800}
+  .chase-alert-title{font-size:clamp(22px,3vw,34px);font-weight:950;letter-spacing:1px;line-height:1.25;margin:5px 0 7px;text-shadow:0 3px 14px #0005}
+  .chase-alert-subtitle{font-size:13px;color:#ffe7e5;line-height:1.7}.chase-alert-message{font-size:15px;font-weight:850;margin-top:8px;color:#fff}
+  .chase-panel{border:1px solid #fecdca}.chase-panel .panel-head{background:linear-gradient(90deg,#fff3f2,#fff)}.chase-status{font-size:11px;border-radius:999px;background:#fff0ee;color:#b42318;padding:5px 9px;font-weight:800}
+  .chase-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.chase-box{border:1px solid #e8ebf1;border-radius:11px;background:#fff;padding:12px;min-width:0}.chase-box h3{font-size:13px;margin:0 0 7px}.chase-box p{font-size:11px;line-height:1.65;color:#667085;margin:0 0 10px}.chase-box .field{margin:8px 0}.chase-box .btnrow{margin-top:8px}.chase-box select,.chase-box input{min-width:0}.chase-metric{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.chase-chip{background:#fff1f0;color:#b42318;border:1px solid #fecdca;border-radius:8px;padding:6px 9px;font-size:11px;font-weight:800}.chase-status-line{font-size:12px;color:#475467;line-height:1.65;background:#f8fafc;border-radius:9px;padding:9px 10px;margin:10px 0}.chase-hidden{display:none!important}
+  .chase-room-occupied{stroke:#b42318!important;stroke-width:3!important}
+  body.horse-ride-active #horseRouteStatus{background:#fff8e7;border:1px solid #f5d9a8;border-radius:8px;padding:8px;color:#754c0e}
+  body.horse-ride-active #horseMoveBtn{background:#176b54}
+  body.horse-ride-active #stopHorseRideBtn{background:#b42318;color:#fff}
+  #chaseDownStairRow[hidden],#rescueNpcRow[hidden]{display:none!important}
+  body.chase-active .floor-tab{border-color:#e6b4b4}
+  body.chase-active .floor-tab.active{background:#7f1d1d;border-color:#7f1d1d}
+  body.chase-active .floor-tab.destroyed{background:#fff0ef;border-color:#b42318;color:#b42318;text-decoration:line-through}
+  body.chase-active .floor-tab.destroyed.active{background:#7f1d1d;color:#fff;text-decoration:line-through}
+
+  body.chase-active #roomEditPanel{display:none!important}
+  body.chase-active #movePanel .horse-rule-group{display:none!important}
+  body.chase-active #playerEditPanel,body.chase-active #playerListPanel .btnrow{display:none!important}
+  body.chase-active #coordToolsPanel #coordRoomName,body.chase-active #coordToolsPanel #coordRoomType,body.chase-active #coordToolsPanel #coordRandomType,body.chase-active #coordToolsPanel #coordHasStairs,body.chase-active #coordToolsPanel #coordIsStairwell,body.chase-active #coordToolsPanel #teleportCreateIfMissing,body.chase-active #coordToolsPanel #createCoordRoomBtn{display:none!important}
+  body.chase-active #coordToolsPanel .field:has(#coordRoomName),body.chase-active #coordToolsPanel .field:has(#coordRoomType),body.chase-active #coordToolsPanel label:has(#coordRandomType),body.chase-active #coordToolsPanel label:has(#coordHasStairs),body.chase-active #coordToolsPanel label:has(#coordIsStairwell),body.chase-active #coordToolsPanel label:has(#teleportCreateIfMissing){display:none!important}
+  body.chase-active #coordToolsPanel .help{display:block!important}
+  body.chase-pending #gmToolGrid>.panel:not(#chaseAdminPanel){opacity:.55;pointer-events:none}
+  body.chase-active #roomName,body.chase-active #roomType,body.chase-active #roomHasStairs,body.chase-active #roomIsStairwell{display:none!important}
+  body.chase-active #movePanel .field:has(#roomName),body.chase-active #movePanel .field:has(#roomType){display:none!important}
+  body.chase-active #movePanel .inline-check:has(#roomHasStairs),body.chase-active #movePanel .inline-check:has(#roomIsStairwell){display:none!important}
+  body.chase-active #moveBtn{background:#b42318;box-shadow:none}
+  body.chase-active .map-wrap{background-color:#fffafa;background-image:radial-gradient(#eccaca .8px,transparent .8px)}
+  @media(max-width:920px){.chase-admin-grid{grid-template-columns:1fr}.chase-alert{padding:0 12px}.chase-alert-card{padding:15px}}
+
+
+  /* 紧凑版 GM 操作区：减少留白，并让短面板并排填充空间 */
+  .topbar{padding:14px 22px;gap:12px}.brand{gap:10px}.brand-mark{width:38px;height:38px;border-radius:10px;font-size:21px}h1{font-size:19px}.top-actions{gap:6px}.topbar button{padding:7px 10px}
+  .layout{padding:10px 16px;gap:10px}
+  .gm-tool-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"players playeredit turn roomedit" "move move coord coord" "chase chase chase chase";gap:9px}
+  .gm-tool-grid .panel{border-radius:11px;box-shadow:0 3px 12px rgba(22,34,56,.045)}
+  .gm-tool-grid .panel-head{padding:8px 11px 7px;min-height:36px}.gm-tool-grid .panel-body{padding:9px 11px}
+  .gm-tool-grid .field{gap:4px}.gm-tool-grid .field label{font-size:11px}.gm-tool-grid .field input,.gm-tool-grid .field select{padding:7px 9px;border-radius:7px}
+  .gm-tool-grid .btn{padding:8px 10px;border-radius:7px;font-size:12px}.gm-tool-grid .help{padding:7px 9px;font-size:10px;line-height:1.5}
+  #playerList{max-height:132px;gap:5px}#playerList .player-row{padding:5px 6px}#playerListPanel .panel-body>p{font-size:10px;line-height:1.45}
+  #playerEdit{gap:6px}#playerEdit .field input,#playerEdit .field select{padding:7px 8px}
+  #turnPanel .turn-summary{margin-bottom:6px}#turnPanel .turn-metric{padding:6px 7px}#turnPanel .metric-value{font-size:15px}#turnPanel .small-muted{font-size:10px;line-height:1.45}
+  #movePanel .panel-body{gap:7px}#movePanel .field:has(#horseDirection),#movePanel .field:has(#horseNextRoomType){margin-top:0}
+  #movePanel .field:has(#horseStatus){display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 8px;align-items:center;grid-column:1/-1;border-top:1px solid #edf0f5;padding-top:7px!important}
+  #movePanel .field:has(#horseStatus)>label{grid-column:1/-1}#horseStatus{font-size:10px;line-height:1.4}#mountHorseBtn{width:auto;white-space:nowrap;padding:6px 8px!important}
+  #movePanel .field:has(#horseDirection),#movePanel .field:has(#horseNextRoomType){grid-column:span 1}
+  #movePanel .field:has(#horseDirection) label,#movePanel .field:has(#horseNextRoomType) label{white-space:nowrap}
+  #movePanel .field:has(#horseStatus)+.field{margin-top:0}
+  #movePanel .btnrow{gap:6px}#movePanel .btnrow .btn{padding:7px 8px}
+  #roomEdit{gap:6px}#roomEdit .field input,#roomEdit .field select{padding:7px 8px}
+  #coordToolsPanel .panel-body{gap:7px}#coordToolsPanel .coord-grid{gap:6px}#coordToolsPanel .help{font-size:10px}
+  #chaseAdminPanel .panel-body{padding:10px 12px}.chase-box{padding:10px}.chase-box p{margin-bottom:7px}
+  @media(max-width:1180px){.gm-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"players playeredit" "turn roomedit" "move move" "coord coord" "chase chase"}}
+  @media(max-width:760px){.gm-tool-grid{grid-template-columns:1fr 1fr;grid-template-areas:"players playeredit" "turn turn" "move move" "roomedit roomedit" "coord coord" "chase chase"}.layout{padding:9px}.topbar{padding:12px 14px}}
+  @media(max-width:560px){.gm-tool-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"players" "playeredit" "turn" "move" "roomedit" "coord" "chase"}.topbar{padding:12px}.layout{padding:8px}.top-actions button{padding:7px 8px}}
+
+
+  /* v1.2 修仙主题：宣纸、黛青、朱砂、鎏金。仅覆盖视觉与排版，不改变数据结构。 */
+  :root{--ink:#24312d;--muted:#6f756d;--line:#d8d0bd;--panel:rgba(250,247,237,.94);--bg:#e9e4d5;--navy:#172d2b;--blue:#315f58;--blue-soft:#e4eee8;--teal:#3d7567;--amber:#a87932;--red:#9f3e36;--shadow:0 10px 28px rgba(46,42,31,.10);--paper:#f7f1df;--jade:#315f58;--jade-dark:#1d3d39;--cinnabar:#9f3e36;--gold:#b58a45}
+  body{background-color:#e9e4d5;background-image:radial-gradient(circle at 15% 8%,rgba(255,255,255,.58),transparent 27%),radial-gradient(circle at 86% 18%,rgba(49,95,88,.08),transparent 24%),repeating-linear-gradient(0deg,rgba(91,75,45,.025) 0,rgba(91,75,45,.025) 1px,transparent 1px,transparent 5px);color:var(--ink);font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun","Microsoft YaHei",serif}
+  .topbar{position:relative;background:linear-gradient(112deg,#142b29 0%,#274b44 56%,#172d2b 100%);border-bottom:2px solid #b58a45;color:#f7f0dc;box-shadow:0 8px 28px rgba(20,43,41,.2);overflow:hidden}
+  .topbar:before,.topbar:after{content:"";position:absolute;border:1px solid rgba(210,184,123,.18);border-radius:50%;pointer-events:none}.topbar:before{width:310px;height:310px;right:-105px;top:-215px}.topbar:after{width:190px;height:190px;right:65px;top:-145px}
+  .brand{position:relative;z-index:1}.brand-mark{border-radius:50%;background:linear-gradient(145deg,#c29a54,#8e642b);border:1px solid #ead6a4;color:#fff7e2;box-shadow:inset 0 0 0 3px rgba(70,44,17,.18),0 4px 14px rgba(0,0,0,.2);font-family:"STKaiti","KaiTi",serif}.brand h1{font-family:"STKaiti","KaiTi","Noto Serif SC",serif;letter-spacing:2px;font-weight:800}.subtitle{color:#d9d5c5;letter-spacing:.6px}
+  .topbar button,.mode-badge{border-color:rgba(226,207,159,.35);background:rgba(248,240,216,.08);color:#f5ecd6}.topbar button:hover{background:rgba(248,240,216,.16);border-color:rgba(226,207,159,.58)}
+  .panel,.cloud-inner{background:linear-gradient(145deg,rgba(252,249,239,.97),rgba(245,240,224,.96));border-color:#d7cdb5;border-radius:10px;box-shadow:var(--shadow);position:relative}.panel:before,.cloud-inner:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(transparent,#b58a45 18%,#315f58 50%,#b58a45 82%,transparent);opacity:.55;pointer-events:none}
+  .panel-head{background:linear-gradient(90deg,rgba(49,95,88,.075),rgba(181,138,69,.035),transparent);border-bottom-color:#ddd3bd}.panel-head h2,.cloud-head h2{font-family:"STKaiti","KaiTi","Noto Serif SC",serif;font-size:15px;letter-spacing:.7px;color:#233c37}
+  .field label{color:#4e554c}.field input,.field select,.cloud-control input,.cloud-control select{background:rgba(255,253,247,.9);border-color:#d6cdb8;color:#2f3934;border-radius:6px}.field input:focus,.field select:focus{border-color:#698d82;box-shadow:0 0 0 3px rgba(49,95,88,.11)}
+  .btn{border-radius:6px;letter-spacing:.15px}.btn-primary{background:linear-gradient(180deg,#3d7168,#2b5852);box-shadow:0 3px 8px rgba(37,79,72,.18)}.btn-primary:hover{background:#244f49}.btn-soft{background:#f1ecdf;border-color:#d6cbb2;color:#45534d}.btn-soft:hover{background:#e8e1d1}.btn-danger{background:#f8e9e3;border-color:#d8aaa1;color:#873a34}
+  .help,.chase-status-line{background:rgba(236,239,226,.75);border-color:#d8d4bf;color:#5e665d;border-radius:6px}.player-row{background:rgba(255,253,247,.72);border-color:#ded6c4;border-radius:7px}.player-row:hover{background:#f2efe3;border-color:#9bad9f}.player-row.active{background:#e3ece5;border-color:#6f958a;box-shadow:inset 3px 0 #315f58}.avatar{border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+  .turn-metric,.shared-ap-card,.link-row{background:rgba(244,240,227,.78);border-color:#ddd4bf;border-radius:7px}.turn-metric .metric-value{color:#294d47}.floor-tab{background:#f7f2e5;border-color:#d8ceb7;color:#59645d;border-radius:5px}.floor-tab.active{background:linear-gradient(180deg,#315f58,#244b46);border-color:#244b46;color:#fff6df;box-shadow:0 3px 8px rgba(36,75,70,.18)}
+  .map-zoom-controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-left:auto}.map-zoom-controls .btn{padding:5px 9px;min-height:29px;font-size:12px}.map-zoom-value{min-width:52px;text-align:center;font-size:12px;font-weight:800;color:#315f58;font-variant-numeric:tabular-nums}.map-zoom-hint{font-size:10px;color:#7a766b;white-space:nowrap}
+  @media(max-width:760px){.map-zoom-controls{width:100%;margin-left:0;justify-content:flex-end}.map-zoom-hint{display:none}.map-wrap{height:430px}}
+  .map-wrap{height:560px;min-height:0;overflow:hidden;cursor:grab;touch-action:none;user-select:none}.map-wrap.is-panning{cursor:grabbing}.map-canvas{width:100%;height:100%;min-height:0;padding:0;display:block;overflow:hidden}.map-canvas svg{width:100%;height:100%;display:block;max-width:none}.map-wrap{background-color:#f4efdf;background-image:linear-gradient(rgba(91,82,58,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(91,82,58,.035) 1px,transparent 1px),radial-gradient(circle at 72% 18%,rgba(49,95,88,.06),transparent 24%);background-size:24px 24px,24px 24px,auto}.map-foot{border-top-color:#ddd4bf;background:rgba(247,243,231,.75)}.door-line{background:#486d64}.dot{box-shadow:0 0 0 1px rgba(45,58,53,.18)}
+  .chase-alert-card{background:linear-gradient(118deg,#54201d,#8c342d 58%,#49211e);border-color:#b56a5f;box-shadow:0 12px 32px rgba(89,37,32,.25)}.chase-alert-kicker{color:#e9c9a6}.chase-panel{border-color:#c8a69a}.chase-panel .panel-head{background:linear-gradient(90deg,#f5e7df,#f7f1df)}.chase-chip{background:#f5e4dc;color:#873a34;border-color:#d6aaa0}
+  body.chase-active .floor-tab{border-color:#c6a69b}body.chase-active .floor-tab.active{background:#74362f;border-color:#74362f}body.chase-active .map-wrap{background-color:#f3e9df;background-image:radial-gradient(#d4bdb2 .7px,transparent .7px);background-size:18px 18px}
+  .mode-dialog{background:linear-gradient(145deg,#fbf7ea,#eee7d4);border-color:#d3c6aa}.mode-kicker{background:#e4ece5;color:#315f58}.mode-option{background:rgba(255,253,246,.78);border-color:#d8ceb8}.mode-option:hover{border-color:#77978e;background:#f4f2e8}.mode-option .mode-icon{background:#e5ece6;color:#315f58}
+  .footer{color:#7a766b;letter-spacing:.5px}.room-rule{color:#656b63}.tiny,.small-muted{color:#777b73}
+  /* 更紧凑的桌面操作台：主操作优先，说明文字减少纵向占用 */
+  @media(min-width:1181px){.gm-tool-grid{grid-template-columns:minmax(230px,.9fr) minmax(230px,.9fr) minmax(260px,1fr) minmax(260px,1fr);grid-template-areas:"players playeredit turn roomedit" "move move coord coord" "chase chase chase chase"}.gm-tool-grid .panel-head{min-height:34px}.gm-tool-grid .panel-body{padding:8px 10px}.gm-tool-grid .field{gap:3px}.gm-tool-grid .help{line-height:1.4}.chase-admin-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  #chaseDownStairRow{padding:7px 8px;border:1px solid #c9b98f;border-left:3px solid #b58a45;border-radius:6px;background:rgba(245,237,213,.72)}#chaseDownStairRow label{color:#735d34}
+
+
+  /* v1.2.3 提示文字可读性：辅助/提示类小字整体提升一级 */
+  .tiny,.help,.small-muted,.cloud-note,.map-foot,.legend,.footer,.chase-box p{font-size:12px!important;}
+  .player-pos,.dex,.shared-ap-meta,.mode-badge,.mode-kicker,.mode-dialog-foot,.chase-status,.chase-chip{font-size:12px!important;}
+  .turn-metric .metric-label,.round-status,.ap-pill,.mode-tag,.map-zoom-hint{font-size:11px!important;}
+  .log-time{font-size:11px!important;}
+  #playerListPanel .panel-body>p,#turnPanel .small-muted,#horseStatus,#coordToolsPanel .help,.gm-tool-grid .help{font-size:11px!important;}
+  .map-zoom-hint{line-height:1.45;}
+
+  /* v1.2.6：桌面端左右底部面板严格等高，共同高度取两侧较短的自然/目标高度；超出部分各自在面板内滚动 */
+  .bottom-grid{align-items:start}
+  .bottom-grid>section.panel{align-self:start;width:100%;min-height:0}
+  .bottom-grid>section.panel>.panel-body{min-height:0}
+  .bottom-grid>section.panel:first-child .log-list{max-height:none;overflow-y:auto;overscroll-behavior:contain;padding-right:4px;scrollbar-gutter:stable}
+  .bottom-grid>section.panel:nth-child(2) .panel-body{overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+  @media(max-width:760px){
+    .bottom-grid>section.panel{height:auto!important}
+    .bottom-grid>section.panel:first-child .log-list{height:260px;max-height:260px}
+    .bottom-grid>section.panel:nth-child(2) .panel-body{overflow:visible}
+  }
+
+  /* v1.2.8：玩家横向总览，下方按玩家、移动、房间三列组织。 */
+  @media(min-width:1181px){
+    .gm-tool-grid{grid-template-columns:minmax(250px,.86fr) minmax(420px,1.28fr) minmax(330px,1fr);grid-template-areas:"players players players" "playeredit move roomedit" "turn move coord" "chase chase chase";gap:10px;align-items:stretch}
+    .gm-tool-grid>.panel{min-width:0;align-self:stretch;height:auto}
+    #playerListPanel{min-height:0}
+    #playerList{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));max-height:174px;gap:7px}
+    #playerListPanel .panel-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:start}
+    #playerListPanel .btnrow{grid-column:2;grid-row:1;min-width:205px;margin:0!important}
+    #playerListPanel .panel-body>p{grid-column:1/-1;margin:0!important}
+    #playerEditPanel,#turnPanel,#movePanel,#roomEditPanel,#coordToolsPanel{height:100%}
+    #playerEditPanel .panel-body,#turnPanel .panel-body,#roomEditPanel .panel-body,#coordToolsPanel .panel-body{padding:10px}
+    #playerEdit{grid-template-columns:minmax(0,1.25fr) minmax(75px,.7fr);gap:7px}
+    #playerEdit .field:nth-child(3){grid-column:1/-1}
+    #playerEdit>.tiny,#playerEdit>button{grid-column:1/-1}
+    #turnPanel .turn-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-bottom:7px}
+    #turnPanel .turn-metric{padding:6px 5px;text-align:center}
+    #turnPanel .metric-value{font-size:14px!important}
+    #turnPanel .btnrow{gap:5px;margin-top:7px!important}
+    #turnPanel .btnrow .btn{min-width:0;padding:7px 5px;font-size:11px;line-height:1.4}
+    #movePanel .panel-body{gap:7px}
+    #roomEdit{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+    #coordToolsPanel .panel-body{gap:7px}
+  }
+  /* 马匹属于移动中的独立特殊规则，整段以浅金色分组提示。 */
+  #movePanel .horse-rule-group{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:12px;border:1px solid #d8c28f;border-radius:9px;background:linear-gradient(135deg,#eee4c9,#e8dbb8);box-shadow:inset 0 1px rgba(255,255,255,.65)}
+  #movePanel .horse-rule-group>.horse-status-field,#movePanel .horse-rule-group>#horseRouteStatus,#movePanel .horse-rule-group>#horseControls,#movePanel .horse-rule-group>.help,#movePanel .horse-rule-group>.btnrow{grid-column:1/-1}
+  #movePanel .horse-rule-group .horse-status-field{padding:0!important;margin:0!important;border:0!important;background:transparent}
+  #movePanel .horse-rule-group .horse-status-field>label{color:#72582c;font-weight:800;letter-spacing:.3px}
+  #horseStatus{color:#716548!important}
+  #mountHorseBtn{border-color:#cbb47e;background:#e9dfc3;color:#5d4a27}
+  #mountHorseBtn:hover{background:#e1d3ad}
+  #movePanel .horse-rule-group>#horseRouteStatus,.horse-rule-group>.help{margin:0!important;background:rgba(255,253,247,.45);border-color:#d8c99e}
+  #movePanel .horse-rule-group>#horseControls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  #movePanel .horse-rule-group>.btnrow{margin:0!important}
+  @media(max-width:560px){#movePanel .horse-rule-group{grid-template-columns:1fr}#movePanel .horse-rule-group>*{grid-column:1/-1}}
+  @media(max-width:1180px){.gm-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"players players" "playeredit turn" "move move" "roomedit coord" "chase chase"}#playerList{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}}
+  @media(max-width:560px){.gm-tool-grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"players" "playeredit" "turn" "move" "roomedit" "coord" "chase"}#playerListPanel .panel-body{display:block}#playerListPanel .btnrow{margin-top:9px!important}}
+  body.viewer #sharedTurnPanel{display:block!important}
+
+  /* 作者署名与规则来源：在 GM、PL 两种页面中均保持可见。 */
+  .attribution-panel{max-width:1648px;margin:0 auto 16px;padding:0 16px}
+  .attribution-card{position:relative;overflow:hidden;padding:15px 17px;border:1px solid #d1c5aa;border-left:4px solid #b58a45;border-radius:9px;background:linear-gradient(135deg,rgba(250,247,237,.97),rgba(237,232,216,.97));box-shadow:0 6px 20px rgba(46,42,31,.08);color:#555b54;font-size:11px;line-height:1.75}
+  .attribution-card h2{margin:0 0 7px;color:#294d47;font-family:"STKaiti","KaiTi","Noto Serif SC",serif;font-size:15px;letter-spacing:.7px}
+  .attribution-card p{margin:3px 0}
+  .attribution-card strong{color:#3c4b45}
+  .attribution-card a{color:#315f58;text-decoration:none;border-bottom:1px dotted #77978e}
+  .attribution-card a:hover{color:#9f3e36;border-bottom-color:#9f3e36}
+  .attribution-card .copyright-note{margin-top:8px;padding-top:8px;border-top:1px solid #d8cfbb;color:#746d60}
+  @media(max-width:760px){.attribution-panel{padding:0 9px}.attribution-card{padding:13px 14px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="brand-mark">塔</div><div><h1>宝塔地图 · GM 实时绘制</h1><div class="subtitle">五层探索 · 独立行动点 · 静态地图 / 云端实时地图</div></div></div>
+  <div class="top-actions"><span class="mode-badge" id="modeBadge">尚未选择模式</span><button id="toggleModeBtn">切换地图模式</button><button id="exportBtn">导出地图 JSON</button><button id="importBtn">导入地图 JSON</button><button id="resetBtn">重置地图</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
+</header>
+<div class="chase-alert" id="chaseAlertBanner" hidden>
+  <div class="chase-alert-card" role="status" aria-live="assertive">
+    <div class="chase-alert-kicker">EMERGENCY · TOWER COLLAPSE</div>
+    <div class="chase-alert-title" id="chaseAlertTitle">宝塔正在塌陷，请全力逃亡！</div>
+    <div class="chase-alert-subtitle" id="chaseAlertSubtitle">沿已经探索的道路向下逃离，尽快回到第一层入口。抵达本层楼梯间后，可任选下一层一处已探索的上行楼梯作为落点。</div>
+    <div class="chase-alert-message" id="chaseAlertMessage" hidden></div>
+  </div>
+</div>
+<div class="mode-overlay" id="modeChooser" hidden role="dialog" aria-modal="true" aria-labelledby="modeChooserTitle">
+  <div class="mode-dialog">
+    <span class="mode-kicker">宝塔地图 · 首次设置</span>
+    <h2 id="modeChooserTitle">你希望使用哪种地图？</h2>
+    <p class="mode-intro">静态地图适合单机管理和线下分享；动态地图适合远程联机游玩。两种模式可以随时切换，不会自动删除已有地图数据。</p>
+    <div class="mode-options">
+      <button class="mode-option" id="chooseStaticMode" type="button">
+        <span class="mode-icon">▧</span><strong>静态地图</strong>
+        <p>操作简单，不需要配置云端服务。GM 在自己的浏览器中绘制和保存地图，再通过截图、共享屏幕或手动导出分享给 PL。GM 的改动不会自动推送到 PL 端。</p>
+        <span class="mode-tag">适合单机 / 线下分享</span>
+      </button>
+      <button class="mode-option dynamic" id="chooseDynamicMode" type="button">
+        <span class="mode-icon">⇄</span><strong>动态地图</strong>
+        <p>网页托管到服务器并连接 CloudBase 数据库后，GM 的修改可以实时推送到 PL 端。需要配置环境、数据库和读写权限，初次部署相对复杂，需要一定代码知识。</p>
+        <span class="mode-tag">适合多人实时观看</span>
+      </button>
+    </div>
+    <div class="mode-dialog-foot"><span>模式只决定数据如何保存与共享，不会改变宝塔的游戏规则。</span><span>之后可用右上角「切换地图模式」重新选择。</span></div>
+  </div>
+</div>
+<section class="cloud-control" id="cloudControl" aria-live="polite">
+  <div class="cloud-inner">
+    <div class="cloud-head">
+      <div><h2>CloudBase 云端实时共享</h2><div class="tiny" style="margin-top:3px">GM 登录后编辑；玩家通过只读链接观看。数据库安全规则才是真正的写权限边界。</div></div>
+      <span class="cloud-status" id="cloudStatus">尚未连接云端</span>
+    </div>
+    <div class="cloud-grid" id="cloudConfigFields">
+      <div class="field"><label for="cloudEnvId">CloudBase 环境 ID</label><input id="cloudEnvId" autocomplete="off" value="c275-static-zhuangshu-d8g3sokv6e755723d-1315594584"></div>
+      <div class="field"><label for="cloudRegion">地域</label><select id="cloudRegion"><option value="ap-shanghai">上海</option><option value="ap-guangzhou">广州</option><option value="ap-singapore">新加坡</option></select></div>
+      <div class="field"><label for="cloudCollection">地图集合名称</label><input id="cloudCollection" autocomplete="off" value="baota_maps"></div>
+      <div class="field"><label for="cloudAccessKey">Publishable Key（公开密钥）</label><input id="cloudAccessKey" type="password" autocomplete="off" placeholder="从 CloudBase API Key 配置中复制"></div>
+    </div>
+    <div class="cloud-actions">
+      <button id="saveCloudConfigBtn" class="btn btn-primary" style="width:auto">保存配置并连接</button>
+      <button id="shareViewerBtn" class="btn btn-soft" hidden>复制玩家只读链接</button>
+      <button id="cloudLogoutBtn" class="btn btn-soft" hidden>退出 GM 登录</button>
+    </div>
+    <div class="cloud-login" id="cloudLogin" hidden>
+      <div class="field"><label for="cloudLoginAccount">GM 用户名 / 邮箱 / 手机号</label><input id="cloudLoginAccount" autocomplete="username" placeholder="输入已注册的 CloudBase 账号"></div>
+      <div class="field"><label for="cloudLoginPassword">密码</label><input id="cloudLoginPassword" type="password" autocomplete="current-password" placeholder="GM 账号密码"></div>
+      <button id="cloudLoginBtn" class="btn btn-primary">GM 登录</button>
+    </div>
+    <div class="cloud-session" id="cloudSession" hidden>
+      <div class="cloud-session-grid">
+        <div><div class="tiny" style="margin-bottom:5px">当前登录账号 UID（复制后先配置数据库安全规则）</div><div class="uid-value" id="cloudCurrentUid">尚未登录</div><button id="copyUidBtn" class="btn btn-soft" style="margin-top:7px">复制 UID</button></div>
+        <div><div class="field"><label for="cloudTrustedUid">本浏览器的 GM UID</label><input id="cloudTrustedUid" autocomplete="off" placeholder="粘贴上方当前账号 UID"></div><button id="trustGmBtn" class="btn btn-primary" style="margin-top:7px">保存 GM 身份</button></div>
+      </div>
+      <p class="cloud-note">请先在数据库集合的「权限管理 → 安全规则」设置：<code>{"read": true, "write": "auth.uid == '你的GM用户UID'"}</code>。然后把同一个 UID 填入上方。本机保存的 GM UID 只控制本浏览器显示编辑器；云端安全规则才负责阻止其他账号写入。</p>
+    </div>
+    <p class="cloud-note" id="cloudSetupHelp">首次使用：创建或选择文档型数据库集合（默认 baota_maps），在 CloudBase「API Key 配置」中创建 Publishable Key 并填入。不要将 SecretId、SecretKey 或其他服务端密钥放入网页。</p>
+  </div>
+</section>
+<main class="layout">
+  <section class="gm-tool-grid" id="gmToolGrid">
+    <section class="panel" id="playerListPanel">
+      <div class="panel-head"><h2>玩家列表</h2><span class="tiny" id="playerCountLabel">5 名玩家</span></div>
+      <div class="panel-body"><div class="player-list" id="playerList"></div><div class="btnrow" style="margin-top:12px"><button id="addPlayerBtn" class="btn btn-soft">＋ 添加玩家</button><button id="removePlayerBtn" class="btn btn-danger">删除当前玩家</button></div><p class="tiny" style="margin:12px 0 0">点击玩家即可选择要操作的角色；玩家之间独立行动，不强制按 DEX 排序。AP 用尽的玩家可提前结束自己的本轮行动。</p></div>
+    </section>
+    <section class="panel" id="playerEditPanel">
+      <div class="panel-head"><h2>玩家信息</h2><span class="tiny">可修改名称 / DEX</span></div>
+      <div class="panel-body" id="playerEdit"></div>
+    </section>
+    <section class="panel" id="movePanel">
+      <div class="panel-head"><h2>记录一次移动</h2><span class="tiny" id="moveStepLabel">一步一格</span></div>
+      <div class="panel-body">
+        <div class="field"><label for="direction">移动方向</label><select id="direction"><option value="N">北 ↑</option><option value="E">东 →</option><option value="S">南 ↓</option><option value="W">西 ←</option><option value="UP">上楼 ↑</option><option value="DOWN">下楼 ↓</option></select></div>
+        <div class="field" id="chaseDownStairRow" hidden><label for="chaseDownStairSelect">下楼落点（可任选下一层的上行楼梯）</label><select id="chaseDownStairSelect"></select></div>
+        <div class="field"><label for="roomName">新房间名称</label><input id="roomName" maxlength="32" placeholder="例如：藏宝库 / 廊道" autocomplete="off"></div>
+        <div class="field"><label for="roomType">新房间类别</label><select id="roomType"></select></div>
+        <label class="inline-check"><input id="roomHasStairs" type="checkbox"> 新房间内设有上行楼梯（本身不因此获得四向扩展）</label>
+        <label class="inline-check"><input id="roomIsStairwell" type="checkbox"> 新房间本身是楼梯间（四向扩展，但不能继续上楼）</label>
+        <button id="moveBtn" class="btn btn-primary">确认移动并更新地图（消耗 1 AP）</button>
+        <div class="help" id="moveHelp">选择方向并输入房间名。移动到空格时会自动生成新房间；移动到已连接的房间则只更新玩家位置。</div>
+        <div class="help" id="moveStatus" style="display:none;margin-top:9px"></div>
+        <section class="horse-rule-group" aria-label="马匹规则">
+        <div class="field horse-status-field" style="grid-column:1/-1;border-top:1px solid #edf0f5;padding-top:12px;margin-top:2px">
+          <label>马匹规则</label>
+          <div class="tiny" id="horseStatus">玩家到达马厩后，由 GM 确认是否成功骑上马。</div>
+          <button id="mountHorseBtn" class="btn btn-soft" type="button">确认成功骑上马（需位于马厩）</button>
+        </div>
+        <div class="field"><label for="horseDirection">骑马方向（由外部骰子决定）</label><select id="horseDirection"><option value="N">北 ↑</option><option value="E">东 →</option><option value="S">南 ↓</option><option value="W">西 ←</option></select></div>
+        <div class="field"><label for="horseNextRoomType">下一间未探索房间类别</label><select id="horseNextRoomType"></select></div>
+        <div class="help" id="horseRouteStatus" style="grid-column:1/-1;margin-top:0">开始骑行后，每次点击“继续前进”只进入一个房间。若房间未探索，GM 使用外部骰子决定类别，在下拉框中选择后再前进；每次推进后类别选择会清空，避免误用上一个房间的结果。PL 决定停下时，GM 点击停止并一次性消耗 1 AP。</div>
+        <div class="btnrow" id="horseControls" style="grid-column:1/-1;margin-top:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px">
+          <button id="startHorseRideBtn" class="btn btn-soft" type="button">开始骑马</button>
+          <button id="horseMoveBtn" class="btn btn-primary" type="button">继续前进一间</button>
+          <button id="stopHorseRideBtn" class="btn btn-danger" type="button">停下并结算（扣 1 AP）</button>
+        </div>
+        <div class="help" style="grid-column:1/-1;margin-top:0">路线不预先指定距离。已连接的门会进入现有房间；前方是空坐标时，可创建新房间并打通直线门。若坐标已有房间但没有门连接，或当前房间的墙壁规则封闭该方向，不能穿墙。整个骑行过程只在停止时扣除 1 AP；如果尚未前进就取消，则不消耗 AP。上楼后无法继续使用本层马匹。</div>
+        <div class="btnrow" style="margin-top:10px"><button id="undoBtn" class="btn btn-soft">撤销上一步操作</button><button id="switchFloorBtn" class="btn btn-soft">查看玩家所在层</button></div>
+        </section>
+      </div>
+    </section>
+    <section class="panel" id="turnPanel">
+      <div class="panel-head"><h2>回合与行动点</h2><span class="tiny" id="turnOrderLabel">玩家独立行动</span></div>
+      <div class="panel-body">
+        <div class="turn-summary">
+          <div class="turn-metric"><div class="metric-label">当前回合</div><div class="metric-value" id="roundValue">1</div></div>
+          <div class="turn-metric"><div class="metric-label">当前选中玩家</div><div class="metric-value" id="turnPlayerValue" style="font-size:14px">慕潇</div></div>
+          <div class="turn-metric"><div class="metric-label">剩余行动点</div><div class="metric-value" id="turnAPValue">2</div></div>
+        </div>
+        <div class="small-muted" id="turnHelp">每名玩家独立行动，不按 DEX 强制排序。每次移动、上下楼或使用道具消耗 1 AP；玩家 AP 用完后可结束本轮，所有玩家 AP 都用完时自动进入下一轮。</div>
+        <div class="btnrow" style="margin-top:10px"><button id="consumeAPBtn" class="btn btn-soft">消耗 1 AP（其他道具）</button><button id="endTurnBtn" class="btn btn-soft">结束该玩家本轮行动</button></div>
+      </div>
+    </section>
+    <section class="panel" id="roomEditPanel">
+      <div class="panel-head"><h2>编辑当前房间</h2><span class="tiny">可把任何类别设为楼梯间</span></div>
+      <div class="panel-body" id="roomEdit"></div>
+    </section>
+    <section class="panel" id="coordToolsPanel">
+      <div class="panel-head"><h2>指定坐标建房 / 传送</h2><span class="tiny">法宝与 GM 地图工具</span></div>
+      <div class="panel-body">
+        <div class="coord-grid">
+          <div class="field"><label for="coordFloor">楼层</label><select id="coordFloor"><option value="1">第 1 层</option><option value="2">第 2 层</option><option value="3">第 3 层</option><option value="4">第 4 层</option><option value="5">第 5 层</option></select></div>
+          <div class="field"><label for="coordX">X 坐标</label><input id="coordX" type="number" min="-99" max="99" step="1" value="0"></div>
+          <div class="field"><label for="coordY">Y 坐标</label><input id="coordY" type="number" min="-99" max="99" step="1" value="0"></div>
+        </div>
+        <div class="field"><label for="coordRoomName">房间名称（可留空）</label><input id="coordRoomName" maxlength="32" placeholder="留空时按类别自动命名"></div>
+        <div class="field"><label for="coordRoomType">房间类别</label><select id="coordRoomType"></select></div>
+        <label class="inline-check"><input id="coordRandomType" type="checkbox" checked> 随机决定房间类别</label>
+        <label class="inline-check"><input id="coordHasStairs" type="checkbox"> 房间内设有上行楼梯</label>
+        <label class="inline-check"><input id="coordIsStairwell" type="checkbox"> 房间本身是楼梯间（四向扩展、不可继续上楼）</label>
+        <label class="inline-check"><input id="teleportCreateIfMissing" type="checkbox" checked> 传送目标没有房间时，自动创建随机房间</label>
+        <div class="btnrow"><button id="createCoordRoomBtn" class="btn btn-soft">仅建立房间</button><button id="teleportBtn" class="btn btn-primary">传送当前行动玩家（消耗 1 AP）</button></div>
+        <div class="help">“仅建立房间”是 GM 地图操作，不消耗 AP；传送消耗所选玩家 1 AP。设有上行楼梯的普通房间只能沿楼梯上行；抵达的楼梯间可四向扩展，但不能继续上楼。</div>
+      </div>
+    </section>
+    <section class="panel chase-panel" id="chaseAdminPanel">
+      <div class="panel-head"><h2>第二阶段：追逐战（GM 控制）</h2><span class="chase-status" id="chaseStatusBadge">等待触发条件</span></div>
+      <div class="panel-body">
+        <div class="chase-status-line" id="chaseAdminStatus">当非慕潇玩家抵达第五层“塔顶”，且本轮所有玩家行动结束后，追逐战地图将被冻结。只有 GM 手动开启后，PL 端才会显示红色警报。</div>
+        <div class="btnrow" style="margin-bottom:12px"><button id="startChaseBtn" class="btn btn-danger" disabled>开启追逐战并通知 PL</button><button id="toggleChaseNoticeBtn" class="btn btn-soft" hidden>隐藏玩家端提示</button><button id="finishChaseBtn" class="btn btn-soft" hidden>结束追逐战</button></div>
+        <div id="chaseActiveControls" hidden>
+          <div class="chase-metric"><span class="chase-chip" id="chaseRoundChip">追逐战第 1 轮</span><span class="chase-chip" id="chaseEscapeChip">已逃出 0 人</span><span class="chase-chip" id="chaseHairChip">白发占据 0 个房间</span></div>
+          <div class="chase-admin-grid">
+            <div class="chase-box">
+              <h3>慕潇（白鬼）：白发行动</h3>
+              <p>白鬼本体固定在塔顶。玩家都结束本轮行动后，GM 先使用外部骰子掷 1d3，再手动填写结果。网页不掷行动点数骰；每次蔓延或攻击消耗一次白鬼行动。白发沿已探索的门或向下楼梯蔓延。</p>
+              <div class="chase-status-line" id="ghostTurnStatus">等待玩家行动结束。</div>
+              <div class="field"><label for="ghostActionsInput">白鬼本轮行动点数（外部骰子结果，1–3）</label><input id="ghostActionsInput" type="number" min="1" max="3" step="1" value="" placeholder="填写外部骰子 1d3 结果"></div>
+              <div class="btnrow"><button id="rollGhostActionsBtn" class="btn btn-primary">确认行动点数并开始白鬼行动</button><button id="endGhostTurnBtn" class="btn btn-soft" disabled>白鬼行动结束，进入下一轮</button></div>
+              <div class="field"><label for="hairNextRoomSelect">白发下一步蔓延到</label><select id="hairNextRoomSelect"></select></div>
+              <button id="spreadHairBtn" class="btn btn-danger" style="width:100%" disabled>白发向前蔓延（消耗 1 次白鬼行动）</button>
+              <div class="field"><label for="ghostAttackTarget">白鬼攻击 / 束缚的玩家</label><select id="ghostAttackTarget"></select></div>
+              <button id="ghostAttackBtn" class="btn btn-danger" style="width:100%" disabled>白发攻击并尝试束缚（消耗 1 次白鬼行动）</button>
+              <p id="nearestPlayerStatus" style="margin-top:9px">最近目标：尚未计算。</p>
+            </div>
+            <div class="chase-box">
+              <h3>白发缠身：挣脱与救援</h3>
+              <p>被白发束缚持续 3 回合，无法移动。GM 依据实际力量检定结果记录；未挣脱者在回合结算时应受到 2d3 伤害，伤害骰由 GM 使用外部骰子处理，网页不会掷骰或计算伤害。其他玩家或 NPC 可通过力量检定救援。</p>
+              <div class="field"><label for="boundPlayerSelect">被束缚的玩家</label><select id="boundPlayerSelect"></select></div>
+              <div class="btnrow"><button id="breakFreeSuccessBtn" class="btn btn-soft">力量成功：挣脱</button><button id="breakFreeFailBtn" class="btn btn-soft">力量失败：记录</button></div>
+              <div class="field"><label for="rescueHelperSelect">实施救援的玩家 / NPC</label><select id="rescueHelperSelect"></select></div>
+              <div class="field" id="rescueNpcRow" hidden><label for="rescueNpcName">NPC 名称</label><input id="rescueNpcName" maxlength="40" placeholder="填写参与救援的 NPC 名称"></div>
+              <div class="field"><label for="rescueTargetSelect">救援目标</label><select id="rescueTargetSelect"></select></div>
+              <button id="rescueBoundBtn" class="btn btn-primary" style="width:100%">力量检定成功：拉出被束缚者（救援者消耗 1 AP）</button>
+              <div class="chase-status-line" id="bindingStatus">目前没有玩家被白发束缚。</div>
+            </div>
+            <div class="chase-box">
+              <h3>特殊状态：墙中白骨</h3>
+              <p>GM 使用外部骰子按规则决定被白骨攻击的玩家，再在下方手动选择目标。网页不会掷 d4；同一追逐回合只能记录一次目标。GM 根据该玩家的敏捷检定记录闪避结果；未闪避者进入白骨战斗轮，战斗结束前不能移动。</p>
+              <div class="field"><label for="wallBonesTargetSelect">本轮被白骨攻击的玩家</label><select id="wallBonesTargetSelect"></select></div>
+              <button id="rollBonesBtn" class="btn btn-soft" style="width:100%">确认被白骨攻击的玩家</button>
+              <div class="chase-status-line" id="bonesStatus">本回合尚未触发墙中白骨。</div>
+              <div class="btnrow"><button id="bonesDodgeBtn" class="btn btn-soft">敏捷成功：躲开</button><button id="bonesFailBtn" class="btn btn-danger">敏捷失败：进入战斗轮</button></div>
+              <button id="resolveBonesBtn" class="btn btn-soft" style="width:100%;margin-top:8px">白骨战斗结束，解除限制</button>
+            </div>
+            <div class="chase-box">
+              <h3>楼层摧毁判定</h3>
+              <p>当白发占据所有连接本层入口与上行楼梯的可行路径后，GM 可以宣告该层被摧毁。系统会检查是否仍有未被白发占据的通路。</p>
+              <div class="field"><label for="destroyFloorSelect">检查楼层</label><select id="destroyFloorSelect"><option value="1">第 1 层</option><option value="2">第 2 层</option><option value="3">第 3 层</option><option value="4">第 4 层</option></select></div>
+              <button id="destroyFloorBtn" class="btn btn-danger" style="width:100%">检查并宣告该层摧毁</button>
+              <div class="chase-status-line" id="destroyedFloorStatus">尚无楼层被宣告摧毁。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+  <section class="maincol">
+    <section class="panel shared-turn-panel" id="sharedTurnPanel">
+      <div class="panel-head"><h2>玩家信息与行动点</h2><span class="tiny" id="sharedRoundValue">第 1 轮</span></div>
+      <div class="panel-body">
+        <div class="turn-summary">
+          <div class="turn-metric"><div class="metric-label">最近行动玩家</div><div class="metric-value" id="sharedTurnPlayerValue" style="font-size:14px">慕潇</div></div>
+          <div class="turn-metric"><div class="metric-label">剩余行动点</div><div class="metric-value" id="sharedTurnAPValue">2/2</div></div>
+          <div class="turn-metric"><div class="metric-label">地图房间数</div><div class="metric-value" id="sharedRoomCountValue">1</div></div>
+        </div>
+        <div class="shared-ap-roster" id="sharedAPRoster"></div>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="map-toolbar">
+        <div class="floor-tabs" id="floorTabs"></div>
+        <div class="map-stats" id="mapStats"></div>
+        <div class="map-zoom-controls" aria-label="地图缩放控制">
+          <span class="map-zoom-hint">滚轮定位缩放 · 拖拽平移</span>
+          <button class="btn btn-soft" id="mapZoomOutBtn" type="button" title="缩小地图">−</button>
+          <span class="map-zoom-value" id="mapZoomValue">100%</span>
+          <button class="btn btn-soft" id="mapZoomInBtn" type="button" title="放大地图">＋</button>
+          <button class="btn btn-soft" id="mapZoomFitBtn" type="button" title="显示本层全部房间">全图</button>
+          <button class="btn btn-soft" id="mapZoomResetBtn" type="button" title="恢复原始比例">100%</button>
+        </div>
+      </div>
+      <div class="map-wrap"><div class="map-canvas" id="mapCanvas"></div></div>
+      <div class="map-foot"><div class="legend"><span><i class="door-line"></i>已打通的门</span><span><i class="dot" style="background:#3677f5"></i>玩家位置标记</span><span>未连通的相邻格不视为通路</span></div><div id="autosaveText">本地自动保存已启用</div></div>
+    </section>
+    <div class="bottom-grid">
+      <section class="panel">
+        <div class="panel-head"><h2>最近移动记录</h2><span class="tiny" id="logCount">0 条</span></div>
+        <div class="panel-body"><div class="log-list" id="logList"></div></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>跨层楼梯连接</h2><span class="tiny">最多五层</span></div>
+        <div class="panel-body"><div class="floor-links" id="floorLinks"></div><p class="room-rule" style="margin:12px 0 0">任意房间类别都可以单独设置为“内设上行楼梯”或“楼梯间”。前者只能沿楼梯上到上一层，不获得四向扩展；到达上层后生成的楼梯间可以四向扩展，但不能继续向上爬层。</p></div>
+      </section>
+    </div>
+    <section class="panel"><div class="panel-head"><h2>地图规则提示</h2></div><div class="panel-body room-rule">玩家独立行动，不强制按 DEX 排序。每次移动、跨层移动或使用道具消耗 1 AP；单名玩家 AP 耗尽后只结束自己的本轮行动，所有玩家的 AP 都耗尽后才自动进入下一轮。入口和楼梯间可以向东南西北四个方向扩展；带有上行楼梯的普通房间不获得四向扩展。普通房间的出口方向锁定后，其他未连接方向视为墙壁。普通楼梯只允许向上到达上一层的楼梯间；楼梯间允许四向扩展、不可继续向上。传送可以跨越门墙直达坐标。第五层普通房间仍遵守单房间规则，楼梯间为四向扩展的例外。</div></section>
+  </section>
+</main>
+<aside class="attribution-panel" aria-labelledby="attributionTitle">
+  <div class="attribution-card">
+    <h2 id="attributionTitle">开发者与规则来源声明</h2>
+    <p><strong>网页及文档制作者：</strong>zhuangshu　·　<strong>联系邮箱：</strong><a href="mailto:zhuangshu_nju@163.com">zhuangshu_nju@163.com</a></p>
+    <p><strong>规则来源：</strong>本网页根据作者“大象的耳朵”的原创模组《万人无我》中的“万法宝塔”游戏规则制作，并在地图管理、操作流程及部分规则呈现上加入了网页制作者的调整。</p>
+    <p><strong>规则优先级：</strong>本网页仅作为游戏辅助工具；如网页功能、记录方式或调整内容与原模组规则存在差异，以原模组《万人无我》的规则为准。</p>
+    <p><strong>代码生成说明：</strong>本网页代码由 ChatGPT 编写生成，并由网页制作者整理、修改、配置与发布。</p>
+    <p class="copyright-note">请尊重网页制作者、原模组作者及相关权利人的署名与合法权益。未经许可，请勿删除或篡改本声明、冒充原创，或以其他可能侵犯相关权利的方式传播和使用。</p>
+  </div>
+</aside>
+<div class="footer">宝塔地图 · CloudBase 实时同步 · GM 修改后，所有打开只读链接的玩家会自动收到更新</div>
+<script src="https://static.cloudbase.net/cloudbase-js-sdk/3.3.10/cloudbase.full.js"></script>
+<script>
+(() => {
+  'use strict';
+  const STORAGE_KEY = 'baota-gm-map-v1';
+  const CLOUD_CONFIG_KEY = 'baota-cloudbase-config-v1';
+  const TRUSTED_GM_KEY = 'baota-cloudbase-trusted-gm-uid-v1';
+  const MAP_MODE_KEY = 'baota-map-mode-v1';
+  let mapZoom=1,mapView={x:0,y:0,w:560,h:340},mapBase={w:560,h:340},mapPan=null;
+  const MAP_ZOOM_MIN=.25,MAP_ZOOM_MAX=4,MAP_ZOOM_STEP=.15;
+  const MAP_DOCUMENT_ID = 'main';
+  const DEFAULT_ENV_ID = 'c275-static-zhuangshu-d8g3sokv6e755723d-1315594584';
+  // 玩家只读入口使用网页内置的公开配置，因此分享 URL 不必携带长参数。
+  // Publishable Key 属于客户端公开凭证；实际数据权限仍必须由 CloudBase 数据库安全规则限制。
+  const DEFAULT_VIEWER_CONFIG = {
+    envId: 'zhuangshu-d8g3sokv6e755723d',
+    region: 'ap-shanghai',
+    collection: 'baotamap',
+    accessKey: 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL3podWFuZ3NodS1kOGczc29rdjZlNzU1NzIzZC5hcC1zaGFuZ2hhaS50Y2ItYXBpLnRlbmNlbnRjbG91ZGFwaS5jb20iLCJzdWIiOiJhbm9uIiwiYXVkIjoiemh1YW5nc2h1LWQ4ZzNzb2t2NmU3NTU3MjNkIiwiZXhwIjo0MDk2MTcwMjgzLCJpYXQiOjE3OTI0ODcwODMsIm5vbmNlIjoiSmdWTlRZUWRSZlNCbi1LSm90MWdZQSIsImF0X2hhc2giOiJKZ1ZOVFlRZFJmU0JuLUtKb3QxZ1lBIiwibmFtZSI6IkFub255bW91cyIsInNjb3BlIjoiYW5vbnltb3VzIiwicHJvamVjdF9pZCI6InpodWFuZ3NodS1kOGczc29rdjZlNzU1NzIzZCIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.Hwu6zyaF-2x45pF2btEUjxJBx4a6nEmGFWldkXlWwzrxrLi-pqh4ZY3Bs6tUIALBI-wcZ1r2Bpgd8o4NRRe2PNtA1sRu0cGYd0uPx4gZGXgc6dsPFz51M9K4hHMBapbuM7MrthCorrswdVhHqxXrsktfocrP5h8DRudJu3SrLqgOizv2B7LhlzWvW20K0gUa-Jl4IJotN7xZE6UTRilqiHgYVKDjGlIJfPHuTpHKd_dgRWz8UHo6UwlBTRYMgCb3aq3q0N5M4cMUsR4thtKpfS2OmBGB83mq0fBEIeuTOTtNtFgdzSwRlOCLc3s-HxFB02SZ_vpBm6FVmQAR0opuIQ'
+  };
+  const URL_PARAMS = new URLSearchParams(window.location.search);
+  const VIEW_MODE = URL_PARAMS.get('view') === '1';
+  function readRememberedMode(){
+    if(VIEW_MODE)return 'dynamic';
+    const fromUrl=URL_PARAMS.get('mode');if(fromUrl==='static'||fromUrl==='dynamic')return fromUrl;
+    const remembered=localStorage.getItem(MAP_MODE_KEY);if(remembered==='static'||remembered==='dynamic')return remembered;
+    return '';
+  }
+  let mapMode = readRememberedMode();
+  const MODE_CHOICE_REQUIRED = !VIEW_MODE && !mapMode;
+  const DIRS = {N:{dx:0,dy:-1,label:'北',opp:'S'},E:{dx:1,dy:0,label:'东',opp:'W'},S:{dx:0,dy:1,label:'南',opp:'N'},W:{dx:-1,dy:0,label:'西',opp:'E'}};
+  const COLORS = ['#3677f5','#0f9b8e','#d97706','#9862d9','#d34f72'];
+  const ROOM_CATEGORIES = [
+    {value:'empty',label:'空房间'}, {value:'hall',label:'大殿'}, {value:'chapel',label:'经堂'},
+    {value:'treasure',label:'藏宝库'}, {value:'corridor',label:'廊道'}, {value:'rare',label:'珍奇阁'},
+    {value:'residence',label:'居室'}, {value:'guardian',label:'护法神殿'}, {value:'meditation',label:'清修室'},
+    {value:'ancestral',label:'宗祠'}, {value:'abyss',label:'阴潭'}, {value:'storage',label:'杂物间'},
+    {value:'stable',label:'马厩'}, {value:'mortuary',label:'义庄'}
+  ];
+  const TYPE_LABELS = {entrance:'入口',empty:'空房间',hall:'大殿',chapel:'经堂',treasure:'藏宝库',corridor:'廊道',rare:'珍奇阁',residence:'居室',guardian:'护法神殿',meditation:'清修室',ancestral:'宗祠',abyss:'阴潭',storage:'杂物间',stable:'马厩',mortuary:'义庄'};
+  const LEGACY_TYPES = {room:'empty',ritual:'storage',stairs:'empty'};
+  const DEFAULT_PLAYERS = [
+    {id:'p1',name:'慕潇',dex:90,color:COLORS[0]},
+    {id:'p2',name:'裴云',dex:70,color:COLORS[1]},
+    {id:'p3',name:'祁岁安',dex:70,color:COLORS[2]},
+    {id:'p4',name:'许昕否',dex:70,color:COLORS[3]},
+    {id:'p5',name:'柳逸书',dex:70,color:COLORS[4]}
+  ];
+  const clone = value => JSON.parse(JSON.stringify(value));
+  function makeInitialChaseState(){
+    return {triggered:false,triggeredByPlayerId:null,triggerRound:null,mapLocked:false,mapSnapshot:null,awaitingGMStart:false,active:false,playerVisible:false,completed:false,round:1,whiteGhostPlayerId:null,hairFrontRoomId:null,hairRoomIds:[],boundPlayers:{},escapedPlayerIds:[],ghostTurnStarted:false,awaitingGhostAction:false,ghostActionsTotal:0,ghostActionsRemaining:0,bones:{round:1,roll:null,targetPlayerId:null,status:'idle'},destroyedFloors:[],startedAt:null};
+  }
+  const makeInitialState = () => {
+    const players=DEFAULT_PLAYERS.map(p=>({...p,roomId:'r0',apPerRound:2,apRemaining:2}));
+    return {version:6,round:1,currentPlayerId:players[0].id,rooms:[{id:'r0',floor:1,x:0,y:0,name:'入口',type:'entrance',hasStairs:false,isStairwell:false,entryDir:null,exitDir:null,doors:{}}],players,verticalLinks:[],horseRide:{active:false,playerId:null,direction:null,floor:null,startRoomId:null,routeRoomIds:[],createdRoomIds:[],startedAt:null,stoppedAt:null},chase:makeInitialChaseState(),logs:[{time:new Date().toISOString(),text:'地图初始化：五名玩家位于第一层入口；每名玩家每回合默认 2 AP，玩家独立行动。'}],nextRoomId:1};
+  };
+  let state, undoStack=[], selectedPlayerId='p1', activeFloor=1;
+  let cloudConfig = readInitialCloudConfig();
+  let cloudApp=null, cloudAuth=null, cloudDb=null, cloudMapDoc=null, cloudWatcher=null, authSubscription=null;
+  let cloudUser=null, trustedGMUid='';
+  let canEdit=false, cloudConfigured=false, cloudReady=false, cloudDocKnown=false, cloudDocExists=false;
+  let cloudWriteChain=Promise.resolve(), applyingRemote=false, seedingMap=false;
+  const $ = id => document.getElementById(id);
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  function readInitialCloudConfig(){
+    const params=new URLSearchParams(window.location.search);
+    if(params.get('env') && params.get('collection') && params.get('key')){
+      return {envId:params.get('env'),region:params.get('region')||'ap-shanghai',collection:params.get('collection'),accessKey:params.get('key')};
+    }
+    // 只读玩家没有本地 GM 配置时，使用网页内置配置；GM 端仍优先读取自己保存的配置。
+    if(params.get('view')==='1')return {...DEFAULT_VIEWER_CONFIG};
+    try{const saved=JSON.parse(localStorage.getItem(CLOUD_CONFIG_KEY)||'null');if(saved&&saved.envId&&saved.collection)return saved;}catch(e){}
+    return {envId:DEFAULT_ENV_ID,region:'ap-shanghai',collection:'baota_maps',accessKey:''};
+  }
+  const roomById = id => state.rooms.find(r=>r.id===id);
+  const selectedPlayer = () => state.players.find(p=>p.id===selectedPlayerId) || state.players[0];
+  const roomAt = (floor,x,y) => state.rooms.find(r=>r.floor===floor && r.x===x && r.y===y);
+  const locationLabel = room => room ? `第${room.floor}层 · ${room.name}（${room.x}, ${room.y}）` : '未知位置';
+  const opposite = d => DIRS[d]?.opp;
+  const isStairwell = room => !!room && !!room.isStairwell;
+  const hasUpStairs = room => !!room && !!room.hasStairs && !room.isStairwell;
+  const isHubRoom = room => !!room && (room.type==='entrance' || isStairwell(room));
+  const chaseState = () => state.chase || (state.chase=makeInitialChaseState());
+  const isChaseActive = () => !!chaseState().active;
+  const isTowerTop = room => !!room && room.floor===5;
+  const isPlayerEscaped = player => !!player && chaseState().escapedPlayerIds.includes(player.id);
+  const isWhiteGhost = player => !!player && (player.id===chaseState().whiteGhostPlayerId || (chaseState().active && player.name.trim()==='慕潇'));
+  function findWhiteGhost(){return state.players.find(p=>p.name.trim()==='慕潇')||state.players.find(p=>p.id==='p1')||null;}
+  function chaseParticipants(){return state.players.filter(p=>!isWhiteGhost(p)&&!isPlayerEscaped(p));}
+  function chaseMapRooms(){return chaseState().active&&chaseState().mapSnapshot?.rooms?chaseState().mapSnapshot.rooms:state.rooms;}
+  function chaseMapRoomById(id){return chaseMapRooms().find(r=>r.id===id)||roomById(id);}
+  function isHairOccupied(roomId){return isChaseActive()&&chaseState().hairRoomIds.includes(roomId);}
+  function isPlayerBound(playerId){return !!chaseState().boundPlayers[playerId];}
+  function addUnique(arr,value){if(!arr.includes(value))arr.push(value);}
+  function setOptions(id,items,selectedValue='',emptyLabel='— 请选择 —'){
+    const el=$(id);if(!el)return;const previous=selectedValue||el.value;
+    el.innerHTML=`<option value="">${escapeHtml(emptyLabel)}</option>`+items.map(item=>`<option value="${escapeHtml(item.value)}">${escapeHtml(item.label)}</option>`).join('');
+    if(items.some(item=>String(item.value)===String(previous)))el.value=previous;
+  }
+  // DEX is information only. Player list order is not an action-order rule.
+  const sortedPlayers = () => [...state.players];
+  function normalizeState(raw){
+    const data=raw&&Array.isArray(raw.rooms)&&Array.isArray(raw.players)?raw:makeInitialState();
+    data.version=6;data.round=Math.max(1,Math.floor(Number(data.round)||1));
+    data.verticalLinks=Array.isArray(data.verticalLinks)?data.verticalLinks:[];
+    const originalRooms=data.rooms;
+    data.rooms.forEach(r=>{
+      r.floor=Math.max(1,Math.min(5,Math.floor(Number(r.floor)||1)));r.x=Math.floor(Number(r.x)||0);r.y=Math.floor(Number(r.y)||0);
+      r.doors=r.doors&&typeof r.doors==='object'?r.doors:{};
+      const legacyStair=!!r.isStairs||r.type==='stairs';
+      const explicitNewFlags=('hasStairs' in r)||('isStairwell' in r);
+      if(!explicitNewFlags&&legacyStair){
+        const linkedUp=data.verticalLinks.some(link=>{
+          if(link.a===r.id){const other=originalRooms.find(q=>q.id===link.b);return !!other&&other.floor>r.floor;}
+          if(link.b===r.id){const other=originalRooms.find(q=>q.id===link.a);return !!other&&other.floor>r.floor;}
+          return false;
+        });
+        // Migrate an old stair room with an upward connection into a stair source;
+        // otherwise treat it as the landing/stairwell.
+        r.hasStairs=linkedUp;r.isStairwell=!linkedUp;
+      }else{
+        r.isStairwell=!!r.isStairwell;
+        r.hasStairs=!!r.hasStairs&&!r.isStairwell;
+      }
+      delete r.isStairs;
+      if(LEGACY_TYPES[r.type])r.type=LEGACY_TYPES[r.type];
+      if(!TYPE_LABELS[r.type])r.type='empty';
+      if(r.type==='entrance'){r.hasStairs=false;r.isStairwell=false;}
+      if(!('entryDir' in r))r.entryDir=null;if(!('exitDir' in r))r.exitDir=null;
+      if(!r.name)r.name=TYPE_LABELS[r.type]||'空房间';
+    });
+    const fifthFloorRooms=data.rooms.filter(r=>r.floor===5);
+    if(fifthFloorRooms.length===1)fifthFloorRooms[0].name='塔顶';
+    data.players.forEach(p=>{p.hasHorse=!!p.hasHorse;p.horseFloor=p.horseFloor!==null&&p.horseFloor!==undefined&&Number.isFinite(Number(p.horseFloor))?Number(p.horseFloor):null;});
+    const ride=data.horseRide&&typeof data.horseRide==='object'?data.horseRide:{};
+    data.horseRide={active:!!ride.active,playerId:ride.playerId||null,direction:['N','E','S','W'].includes(ride.direction)?ride.direction:null,floor:ride.floor!==null&&ride.floor!==undefined&&Number.isFinite(Number(ride.floor))?Number(ride.floor):null,startRoomId:ride.startRoomId||null,routeRoomIds:Array.isArray(ride.routeRoomIds)?ride.routeRoomIds.filter(id=>data.rooms.some(r=>r.id===id)):[],createdRoomIds:Array.isArray(ride.createdRoomIds)?ride.createdRoomIds.filter(id=>data.rooms.some(r=>r.id===id)):[],startedAt:ride.startedAt||null,stoppedAt:ride.stoppedAt||null};
+    if(data.horseRide.active&&!data.players.some(p=>p.id===data.horseRide.playerId))data.horseRide.active=false;
+    data.chase={...makeInitialChaseState(),...(data.chase&&typeof data.chase==='object'?data.chase:{})};
+    data.chase.hairRoomIds=Array.isArray(data.chase.hairRoomIds)?data.chase.hairRoomIds:[];
+    data.chase.escapedPlayerIds=Array.isArray(data.chase.escapedPlayerIds)?data.chase.escapedPlayerIds:[];
+    data.chase.destroyedFloors=Array.isArray(data.chase.destroyedFloors)?data.chase.destroyedFloors:[];
+    data.chase.boundPlayers=data.chase.boundPlayers&&typeof data.chase.boundPlayers==='object'?data.chase.boundPlayers:{};
+    const priorBones=data.chase.bones&&typeof data.chase.bones==='object'?data.chase.bones:{};
+    const hadLegacyAutoRoll=priorBones.roll!==null&&priorBones.roll!==undefined;
+    data.chase.bones={round:Math.max(1,Number(data.chase.round)||1),roll:null,targetPlayerId:null,status:'idle',...priorBones};
+    // Dice are rolled externally. Discard an old auto-rolled d4 and its auto-selected target.
+    if(hadLegacyAutoRoll){data.chase.bones.status='idle';data.chase.bones.targetPlayerId=null;}
+    data.chase.bones.roll=null;
+    if(data.chase.mapSnapshot&&(!Array.isArray(data.chase.mapSnapshot.rooms)||!Array.isArray(data.chase.mapSnapshot.verticalLinks)))data.chase.mapSnapshot=null;
+    const firstRoom=data.rooms[0]||{id:'r0'};
+    data.players.forEach((p,i)=>{
+      if(!Number.isFinite(Number(p.apPerRound))||Number(p.apPerRound)<1)p.apPerRound=2;
+      p.apPerRound=Math.max(1,Math.min(20,Math.floor(Number(p.apPerRound))));
+      if(!Number.isFinite(Number(p.apRemaining)))p.apRemaining=p.apPerRound;
+      p.apRemaining=Math.max(0,Math.min(p.apPerRound,Math.floor(Number(p.apRemaining))));
+      if(!p.roomId||!data.rooms.some(r=>r.id===p.roomId))p.roomId=firstRoom.id;
+      if(!p.id)p.id='p'+(i+1);
+    });
+    data.logs=Array.isArray(data.logs)?data.logs:[];
+    const maxId=Math.max(0,...data.rooms.map(r=>Number(String(r.id).replace(/^r/,''))||0));
+    data.nextRoomId=Math.max(Math.floor(Number(data.nextRoomId)||1),maxId+1);
+    // currentPlayerId is retained only for compatibility with earlier saved files.
+    if(!data.players.some(p=>p.id===data.currentPlayerId))data.currentPlayerId=data.players[0]?.id||null;
+    return data;
+  }
+  function categoryLabel(type){return TYPE_LABELS[type]||'空房间';}
+  function fillCategorySelect(id,includeEntrance=false){
+    const select=$(id);if(!select)return;
+    const prior=select.value;
+    const horsePlaceholder=id==='horseNextRoomType'?'<option value="">—先使用外部骰子，再选择房间类别—</option>':'';
+    select.innerHTML=(includeEntrance?'<option value="entrance">入口</option>':'')+horsePlaceholder+ROOM_CATEGORIES.map(c=>`<option value="${c.value}">${c.label}</option>`).join('');
+    if([...select.options].some(o=>o.value===prior))select.value=prior;else select.value=(id==='horseNextRoomType')?'':(includeEntrance?'entrance':'empty');
+  }
+  function triggerChaseIfNeeded(player,targetRoom){
+    const chase=chaseState();
+    if(chase.triggered||chase.active||!player||player.name.trim()==='慕潇'||!isTowerTop(targetRoom))return;
+    chase.triggered=true;chase.triggeredByPlayerId=player.id;chase.triggerRound=state.round;
+    const ghost=findWhiteGhost();chase.whiteGhostPlayerId=ghost?.id||null;
+    // This is intentionally not written to the public movement log; it remains a GM-only trigger until the GM opens the chase.
+  }
+  function captureChaseMap(){
+    const chase=chaseState();if(chase.mapLocked)return;
+    const top=state.rooms.find(r=>r.floor===5);
+    chase.whiteGhostPlayerId=chase.whiteGhostPlayerId||findWhiteGhost()?.id||null;
+    chase.mapSnapshot={rooms:clone(state.rooms),verticalLinks:clone(state.verticalLinks),playerPositions:state.players.map(p=>({playerId:p.id,roomId:p.roomId})),round:state.round,lockedAt:new Date().toISOString()};
+    chase.mapLocked=true;chase.awaitingGMStart=true;chase.hairFrontRoomId=top?.id||null;
+    chase.hairRoomIds=[];chase.boundPlayers={};chase.escapedPlayerIds=[];chase.destroyedFloors=[];
+    chase.bones={round:1,roll:null,targetPlayerId:null,status:'idle'};
+  }
+  function allCurrentActionsSpent(){
+    if(isChaseActive()){
+      const participants=chaseParticipants();
+      return participants.length===0||participants.every(p=>p.apRemaining<=0);
+    }
+    return state.players.length>0&&state.players.every(p=>p.apRemaining<=0);
+  }
+  function handleActionRoundBoundary(){
+    if(!allCurrentActionsSpent())return 'ongoing';
+    const chase=chaseState();
+    if(chase.active){
+      if(chase.completed)return 'chase-complete';
+      const participants=chaseParticipants();
+      if(!participants.length){
+        completeChaseIfAllEscaped();
+        return 'chase-complete';
+      }
+      if(!chase.awaitingGhostAction){
+        chase.awaitingGhostAction=true;chase.ghostTurnStarted=false;chase.ghostActionsTotal=0;chase.ghostActionsRemaining=0;
+        addLog(`追逐战第 ${chase.round} 轮：所有未逃脱玩家均已结束行动，轮到白鬼。`);
+      }
+      return 'ghost-turn';
+    }
+    if(chase.triggered&&!chase.mapLocked){
+      captureChaseMap();
+      return 'chase-ready';
+    }
+    state.round=(Number(state.round)||1)+1;
+    state.players.forEach(p=>p.apRemaining=p.apPerRound);
+    addLog(`所有玩家本轮行动点均已用完，自动进入第 ${state.round} 轮并恢复各自 AP。`);
+    return 'round-advanced';
+  }
+  function consumeActionPoint(player,actionLabel,afterSpend=null){
+    if(!player||player.apRemaining<=0)return false;
+    player.apRemaining=Math.max(0,(Number(player.apRemaining)||0)-1);
+    if(actionLabel)addLog(`${player.name} ${actionLabel}，本轮剩余 ${player.apRemaining}/${player.apPerRound} AP。`);
+    if(typeof afterSpend==='function')afterSpend();
+    state.currentPlayerId=player.id; // compatibility only; never gates another player's actions
+    selectedPlayerId=player.id;
+    const active=selectedPlayer();if(active){const r=roomById(active.roomId);if(r)activeFloor=r.floor;}
+    handleActionRoundBoundary();
+    return true;
+  }
+  function assertCurrentTurn(player){
+    if(!player){message('请先选择玩家。','error');return false;}
+    if(isChaseActive()){
+      const chase=chaseState();
+      if(isWhiteGhost(player)){message('慕潇（白鬼）的本体不移动，请在“白鬼行动”面板控制白发。','error');return false;}
+      if(isPlayerEscaped(player)){message(`「${player.name}」已经逃出宝塔，不再需要行动。`,'error');return false;}
+      if(chase.awaitingGhostAction||chase.ghostTurnStarted){message('玩家行动阶段已结束，当前轮由白鬼行动。','error');return false;}
+    }
+    if(player.apRemaining<=0){message(`「${player.name}」本轮行动点已用完。其他玩家仍可独立行动。`,'error');return false;}
+    return true;
+  }
+  const dirName = d => DIRS[d]?.label || (d==='UP'?'上楼':'下楼');
+  function pushUndo(){ undoStack.push(clone(state)); if(undoStack.length>80) undoStack.shift(); }
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({state,undoStack})); }
+    catch(err){ $('autosaveText').textContent='浏览器未允许本地备份'; }
+    if(mapMode==='static'&&!VIEW_MODE){$('autosaveText').textContent='静态地图 · 已保存在本浏览器';return;}
+    if(VIEW_MODE || !canEdit || !cloudReady || applyingRemote || !cloudMapDoc){
+      if(VIEW_MODE) $('autosaveText').textContent='只读观看 · 等待云端更新';
+      else if(!canEdit) $('autosaveText').textContent='尚未获得 GM 编辑权限';
+      return;
+    }
+    const payload={state:clone(state),undoStack:clone(undoStack),updatedAt:new Date().toISOString(),updatedBy:cloudUser?.id||''};
+    $('autosaveText').textContent='正在同步云端…';
+    cloudWriteChain=cloudWriteChain.then(async()=>{
+      const result=await cloudMapDoc.set(payload);
+      if(result?.error) throw new Error(result.error.message||'CloudBase 写入失败');
+      if(result?.code) throw new Error(result.message||result.code);
+      cloudDocExists=true;cloudDocKnown=true;
+      $('autosaveText').textContent='云端同步成功 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      setCloudStatus('实时同步中 · 最后保存 '+new Date().toLocaleTimeString('zh-CN'), 'ok');
+    }).catch(err=>{
+      $('autosaveText').textContent='云端同步失败，请检查数据库规则';
+      setCloudStatus('云端写入失败：'+(err?.message||'未知错误'), 'error');
+      console.error('CloudBase map save failed:',err);
+    });
+  }
+  function loadSaved(){
+    try { const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return null; const parsed=JSON.parse(raw); if(parsed && parsed.state && Array.isArray(parsed.state.rooms) && Array.isArray(parsed.state.players)) { undoStack=Array.isArray(parsed.undoStack)?parsed.undoStack:[]; return parsed.state; } }
+    catch(e){} return null;
+  }
+  trustedGMUid=localStorage.getItem(TRUSTED_GM_KEY)||'';
+  state = normalizeState((!VIEW_MODE ? loadSaved() : null) || makeInitialState());
+  selectedPlayerId=state.currentPlayerId||state.players[0]?.id||'p1';
+  const selectedRoom = () => roomById(selectedPlayer()?.roomId);
+
+  function addLog(text){ state.logs.unshift({time:new Date().toISOString(),text}); state.logs=state.logs.slice(0,100); }
+  function message(text,kind='info'){
+    const help=$('moveStatus'); help.style.display='block'; help.textContent=text;
+    help.style.background=kind==='error'?'#fff3f3':kind==='success'?'#effaf5':'#f5f8ff';
+    help.style.borderColor=kind==='error'?'#f4d0d0':kind==='success'?'#ccefe0':'#e4ebff';
+    help.style.color=kind==='error'?'#a52a35':kind==='success'?'#16725f':'#51617c';
+  }
+  function positionForMove(room,dir){ const d=DIRS[dir]; return {floor:room.floor,x:room.x+d.dx,y:room.y+d.dy}; }
+  function addRoom({floor,x,y,name,type,hasStairs=false,isStairwell=false,entryDir=null,exitDir=null}){
+    const landing=!!isStairwell;
+    const room={id:'r'+state.nextRoomId++,floor,x,y,name:name||categoryLabel(type),type:TYPE_LABELS[type]?type:'empty',hasStairs:!!hasStairs&&!landing,isStairwell:landing,entryDir,exitDir,doors:{}};state.rooms.push(room);return room;
+  }
+  function connectRooms(a,b,dir){ a.doors[dir]=b.id; b.doors[opposite(dir)]=a.id; }
+  function hasVerticalLink(roomId,targetFloor){
+    return state.verticalLinks.find(link=>{
+      const a=roomById(link.a), b=roomById(link.b);
+      return (link.a===roomId && b?.floor===targetFloor) || (link.b===roomId && a?.floor===targetFloor);
+    });
+  }
+  function otherRoomInLink(link,roomId){ return link.a===roomId?roomById(link.b):roomById(link.a); }
+  function movePlayerDuringChase(player,source,dir){
+    const chase=chaseState();
+    if(isPlayerBound(player.id)){message(`「${player.name}」正被白发缠身，无法移动；请先进行力量检定或等待救援。`,'error');return;}
+    if(chase.bones?.status==='battle'&&chase.bones.targetPlayerId===player.id){message(`「${player.name}」正在与墙中白骨战斗，战斗结束前不能移动。`,'error');return;}
+    if(chase.awaitingGhostAction||chase.ghostTurnStarted){message('当前轮已进入白鬼行动阶段，玩家暂时不能移动。','error');return;}
+    let target=null;
+    if(DIRS[dir]){
+      const targetId=source.doors?.[dir];
+      if(!targetId){message('追逐战地图已经冻结，不能临时创建新房间。请沿已探索并打通的门原路返回。','error');return;}
+      target=chaseMapRoomById(targetId);
+      if(!target||target.floor!==source.floor){message('该门的地图连接异常，无法移动。','error');return;}
+    }else if(dir==='DOWN'){
+      if(!isStairwell(source)&&source.floor!==5){message('追逐战中只有抵达本层楼梯间后才能选择下楼落点。','error');return;}
+      const frozenRooms=chase.mapSnapshot?.rooms||state.rooms;
+      const candidates=frozenRooms.filter(r=>r.floor===source.floor-1&&hasUpStairs(r));
+      if(!candidates.length){message('下一层没有已探索且设有上行楼梯的房间，无法从这里继续向下逃亡。','error');return;}
+      const chosenId=$('chaseDownStairSelect')?.value;
+      if(candidates.length>1&&!chosenId){message('下一层有多个可用楼梯，请先在“下楼落点”中选择一个房间。','error');return;}
+      target=candidates.find(r=>r.id===chosenId)||candidates[0];
+    }else{
+      message('追逐战只能沿已探索的门返回或向下楼梯逃离，不能继续上楼。','error');return;
+    }
+    pushUndo();const from=source;player.roomId=target.id;activeFloor=target.floor;
+    addLog(`${escapeHtml(player.name)} 在追逐战中从第${from.floor}层「${escapeHtml(from.name)}」移动到第${target.floor}层「${escapeHtml(target.name)}」。`);
+    consumeActionPoint(player,'沿原路逃亡',()=>{
+      if(isHairOccupied(target.id))bindPlayer(player.id,'进入白发占据的房间');
+      else if(target.floor===1&&target.type==='entrance')markPlayerEscaped(player,'抵达第一层入口');
+    });
+    save();render();
+    if(isPlayerEscaped(player))message(`「${player.name}」已从第一层入口逃离宝塔！`,'success');
+    else if(isPlayerBound(player.id))message(`「${player.name}」进入白发占据的房间，被白发缠身！`,'error');
+    else message(`已沿原路到达「${target.name}」，消耗 1 AP。`,'success');
+  }
+  function currentHorseRide(){return state.horseRide||{active:false,routeRoomIds:[],createdRoomIds:[]};}
+  function renderHorseStatus(){
+    const ride=currentHorseRide();
+    if(ride.active){
+      const rider=state.players.find(p=>p.id===ride.playerId),room=roomById(rider?.roomId);
+      if(rider)selectedPlayerId=rider.id;
+      const travelled=(ride.routeRoomIds||[]).map(id=>roomById(id)).filter(Boolean);
+      const routeText=travelled.length?travelled.map((r,i)=>`${i+1}. ${r.name}（${categoryLabel(r.type)}）`).join(' → '):'尚未进入任何新房间';
+      $('horseStatus').textContent=`${rider?.name||'当前玩家'}正在骑马向${dirName(ride.direction)}前进（第${ride.floor}层），已经过 ${travelled.length} 间。`;
+      $('horseRouteStatus').textContent=`骑行中：${routeText}。当前位置：${room?`${room.name}（${categoryLabel(room.type)}）`:'未知房间'}。PL 确认停下后，GM 点击“停下并结算”。`;
+    }else{
+      const p=selectedPlayer(),r=roomById(p?.roomId);if(!p||!r)return;
+      const usable=!!p.hasHorse&&p.horseFloor===r.floor&&!isChaseActive();
+      $('horseStatus').textContent=usable?`${p.name} 已骑马（第${p.horseFloor}层），可以开始骑行。`:p.hasHorse?`${p.name} 曾获得马匹，但当前位于第${r.floor}层；马匹仅可在第${p.horseFloor}层使用。`:`${p.name} 尚未骑马。只有位于马厩时，GM 才能确认成功骑乘。`;
+      if(ride.routeRoomIds?.length){
+        const last=(ride.routeRoomIds||[]).map(id=>roomById(id)).filter(Boolean);
+        $('horseRouteStatus').textContent=`上次骑行经过 ${last.length} 间：${last.map((r,i)=>`${i+1}. ${r.name}（${categoryLabel(r.type)}）`).join(' → ')}。可开始下一次骑行。`;
+      }else $('horseRouteStatus').textContent='开始骑行后，每次点击“继续前进”只进入一个房间。若房间未探索，GM 根据外部骰子选择类别，再继续前进；PL 决定停下时，GM 点击停止并一次性消耗 1 AP。';
+    }
+    const p=ride.active?state.players.find(q=>q.id===ride.playerId):selectedPlayer(),r=roomById(p?.roomId);
+    const usable=!!p&&!!r&&!!p.hasHorse&&p.horseFloor===r.floor&&!isChaseActive()&&p.apRemaining>0;
+    $('mountHorseBtn').disabled=!!ride.active||!canEdit||!p||!r||r.type!=='stable'||isChaseActive()||!!p.hasHorse;
+    $('horseDirection').disabled=!!ride.active;
+    $('horseNextRoomType').disabled=!ride.active;
+    $('startHorseRideBtn').disabled=!!ride.active||!usable||!canEdit;
+    $('horseMoveBtn').disabled=!ride.active||!canEdit;
+    $('stopHorseRideBtn').disabled=!ride.active||!canEdit;
+    const lock=!!ride.active;
+    ['direction','roomName','roomType','roomHasStairs','roomIsStairwell','moveBtn','consumeAPBtn','endTurnBtn','createCoordRoomBtn','teleportBtn','addPlayerBtn','removePlayerBtn','switchFloorBtn','resetBtn','importBtn','toggleModeBtn'].forEach(id=>{const el=$(id);if(el)el.disabled=lock;});
+    const savePlayer=$('savePlayerBtn');if(savePlayer)savePlayer.disabled=lock;
+    const saveRoom=$('saveRoomEditBtn');if(saveRoom)saveRoom.disabled=lock;
+    $('undoBtn').disabled=lock||!undoStack.length;$('undoBtn').style.opacity=$('undoBtn').disabled?'.5':'1';
+    document.body.classList.toggle('horse-ride-active',lock);
+  }
+  function mountHorse(){
+    if(!canManage())return;const p=selectedPlayer(),r=roomById(p?.roomId);if(!p||!r)return;
+    if(currentHorseRide().active){message('当前有骑马路线尚未结算，请先停止骑行。','error');return;}
+    if(r.type!=='stable'){message('玩家必须先到达马厩，GM 才能确认骑马成功。','error');return;}
+    if(p.hasHorse){message('该玩家已经获得过马匹。','error');return;}
+    pushUndo();p.hasHorse=true;p.horseFloor=r.floor;addLog(`${p.name} 在第${r.floor}层马厩成功骑上马。`);save();render();message(`${p.name} 已成功骑上马，可在本层使用骑马移动。`,'success');
+  }
+  function startHorseRide(){
+    if(!canManage())return;
+    if(currentHorseRide().active){message('已经有一段骑马路线正在进行。','error');return;}
+    const p=selectedPlayer(),source=roomById(p?.roomId),dir=$('horseDirection').value;
+    if(!p||!source)return;
+    if(!assertCurrentTurn(p))return;
+    if(!p.hasHorse||p.horseFloor!==source.floor){message('当前玩家没有可在本层使用的马匹；上楼后不能继续使用原楼层的马。','error');return;}
+    if(isChaseActive()){message('追逐阶段不能使用马匹移动。','error');return;}
+    if(source.floor===5){message('塔顶不能进行水平骑马探索。','error');return;}
+    // Do not start in a direction already blocked by the current room's established walls.
+    if(!source.doors?.[dir]&&!isHubRoom(source)&&source.exitDir&&source.exitDir!==dir){message(`「${source.name}」的出口方向已锁定为${dirName(source.exitDir)}，不能骑马穿墙。`,'error');return;}
+    if(!source.doors?.[dir]&&!isHubRoom(source)&&source.entryDir===dir){message(`「${source.name}」向${dirName(dir)}的一侧是墙壁，没有门连接，不能骑马穿墙。`,'error');return;}
+    pushUndo();state.horseRide={active:true,playerId:p.id,direction:dir,floor:source.floor,startRoomId:source.id,routeRoomIds:[],createdRoomIds:[],startedAt:new Date().toISOString(),stoppedAt:null};
+    selectedPlayerId=p.id;activeFloor=source.floor;addLog(`${p.name} 开始在第${source.floor}层骑马向${dirName(dir)}前进，尚未消耗 AP。`);save();render();message(`骑行已开始。每次推进一间房，PL 决定停下后再结算 1 AP。`,'success');
+  }
+  function advanceHorseRide(){
+    if(!canManage())return;
+    const ride=currentHorseRide();if(!ride.active){message('请先点击“开始骑马”。','error');return;}
+    const p=state.players.find(q=>q.id===ride.playerId),source=roomById(p?.roomId),dir=ride.direction;
+    if(!p||!source){message('骑行玩家或当前位置不存在，请结束骑行后检查地图。','error');return;}
+    if(p.apRemaining<=0){message('该玩家没有剩余 AP，不能继续骑行。请停止骑行并结算。','error');return;}
+    if(source.floor!==ride.floor){message('骑马路线不能跨层。','error');return;}
+    const pos=positionForMove(source,dir),connectedId=source.doors?.[dir];
+    let target=connectedId?roomById(connectedId):null,created=false;
+    if(connectedId){
+      if(!target||target.floor!==ride.floor||target.x!==pos.x||target.y!==pos.y){message('已有门连接不符合直线骑行路线，已阻止穿墙或跨层移动。','error');return;}
+    }else{
+      if(source.floor===5){message('第五层只有塔顶，不能继续创建骑行房间。','error');return;}
+      if(!isHubRoom(source)){
+        if(source.exitDir&&source.exitDir!==dir){message(`路线被墙壁阻断：「${source.name}」的出口方向已锁定为${dirName(source.exitDir)}。不能穿墙。`,'error');return;}
+        if(source.entryDir===dir){message(`路线被墙壁阻断：「${source.name}」向${dirName(dir)}的一侧是入口墙，没有门连接。不能穿墙。`,'error');return;}
+      }
+      const occupied=roomAt(pos.floor,pos.x,pos.y);
+      if(occupied){message(`前方坐标已有「${occupied.name}」，但与当前房间没有门连接。为遵守墙壁规则，不能穿墙或自动接通该房间。`,'error');return;}
+      const type=$('horseNextRoomType').value;
+      if(!TYPE_LABELS[type]||type==='entrance'){message('请根据外部骰子的结果，先选择一个有效的新房间类别。','error');return;}
+      pushUndo();
+      target=addRoom({floor:pos.floor,x:pos.x,y:pos.y,name:categoryLabel(type),type,hasStairs:false,isStairwell:false,entryDir:opposite(dir),exitDir:null});
+      if(!isHubRoom(source))source.exitDir=dir;
+      connectRooms(source,target,dir);created=true;ride.createdRoomIds.push(target.id);
+      addLog(`骑马探索新房间：${p.name} 向${dirName(dir)}进入第${target.floor}层「${target.name}」（${categoryLabel(target.type)}），已建立直线门连接。`);
+    }
+    if(!created)pushUndo();
+    p.roomId=target.id;selectedPlayerId=p.id;activeFloor=target.floor;
+    ride.routeRoomIds.push(target.id);$('horseNextRoomType').value='';
+    addLog(`${p.name} 骑马向${dirName(dir)}前进一间，到达「${target.name}」（${categoryLabel(target.type)}）；累计骑行 ${ride.routeRoomIds.length} 间，暂未扣除 AP。`);
+    save();render();message(`本次到达：${target.name}（${categoryLabel(target.type)}）。当前累计 ${ride.routeRoomIds.length} 间，AP 尚未扣除。PL 决定停下时请点击“停下并结算”。`,'success');
+  }
+  function stopHorseRide(){
+    if(!canManage())return;
+    const ride=currentHorseRide();if(!ride.active){message('当前没有正在进行的骑马路线。','error');return;}
+    const p=state.players.find(q=>q.id===ride.playerId);if(!p){message('找不到本次骑行玩家。','error');return;}
+    const route=(ride.routeRoomIds||[]).map(id=>roomById(id)).filter(Boolean);
+    pushUndo();ride.active=false;ride.stoppedAt=new Date().toISOString();
+    if(!route.length){addLog(`${p.name} 取消了骑马移动，尚未进入新房间，因此不消耗 AP。`);save();render();message('骑行已取消，尚未前进，不消耗 AP。','info');return;}
+    addLog(`${p.name} 停止骑马，经过 ${route.length} 间：${route.map(r=>`「${r.name}」（${categoryLabel(r.type)}）`).join(' → ')}；最终停在「${roomById(p.roomId)?.name||'未知房间'}」，整段骑行消耗 1 AP。`);
+    consumeActionPoint(p,`骑马连续移动 ${route.length} 间（仅消耗 1 AP）`);save();render();message(`骑行结束，共经过 ${route.length} 间，最终停在「${roomById(p.roomId)?.name||'未知房间'}」。本段骑行只消耗 1 AP。`,'success');
+  }
+  function movePlayer(){
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}
+    const player=selectedPlayer(),source=selectedRoom(),dir=$('direction').value;
+    if(!player||!source){message('无法找到当前玩家或当前位置。','error');return;}
+    if(!assertCurrentTurn(player))return;
+    if(isChaseActive()){movePlayerDuringChase(player,source,dir);return;}
+    if(DIRS[dir]&&source.floor===5){message('第五层只有一个房间“塔顶”，不能继续横向扩展。','error');return;}
+    if(DIRS[dir]){
+      const pos=positionForMove(source,dir),connectedId=source.doors?.[dir];
+      if(connectedId){
+        const target=roomById(connectedId);if(!target){message('地图连接数据异常，请检查地图。','error');return;}
+        pushUndo();player.roomId=target.id;activeFloor=target.floor;triggerChaseIfNeeded(player,target);
+        addLog(`${escapeHtml(player.name)} 从「${escapeHtml(source.name)}」向${dirName(dir)}移动，沿门进入「${escapeHtml(target.name)}」。`);
+        consumeActionPoint(player,'移动');message(`已进入「${target.name}」，消耗 1 AP。`,'success');save();render();return;
+      }
+      const hub=isHubRoom(source);
+      if(source.floor===5&&!hub){message('第五层普通房间（包括仅设有上行楼梯的房间）不能继续水平扩展；只有楼梯间可四向扩展。','error');return;}
+      if(!hub){
+        if(source.exitDir&&source.exitDir!==dir){message(`「${source.name}」的出口方向已锁定为${dirName(source.exitDir)}；其他未连接方向是墙壁。`,'error');return;}
+        if(source.entryDir===dir){message('该方向是当前房间的入口方向，但没有对应门连接。','error');return;}
+      }
+      const occupied=roomAt(pos.floor,pos.x,pos.y);
+      if(occupied){
+        if(!hub){message(`该坐标已有「${occupied.name}」，但当前房间与它之间没有门，不能直接进入。`,'error');return;}
+        const backDir=opposite(dir),targetHub=isHubRoom(occupied),doorCount=Object.keys(occupied.doors||{}).length;
+        if(occupied.doors?.[backDir]){message('目标房间该方向已有另一扇门，无法在同一方向再建立连接。','error');return;}
+        if(!targetHub&&doorCount>=2){message(`目标房间「${occupied.name}」的进出门已经用完，不能再打通新门。`,'error');return;}
+        pushUndo();connectRooms(source,occupied,dir);if(!targetHub&&!occupied.entryDir)occupied.entryDir=backDir;
+        player.roomId=occupied.id;activeFloor=occupied.floor;triggerChaseIfNeeded(player,occupied);
+        addLog(`${escapeHtml(player.name)} 从${source.type==='entrance'?'入口':'楼梯间'}向${dirName(dir)}打开新门，进入已有房间「${escapeHtml(occupied.name)}」。`);
+        consumeActionPoint(player,'移动');message(`已与已有房间「${occupied.name}」打通门并进入，消耗 1 AP。`,'success');save();render();return;
+      }
+      const type=$('roomType').value,name=$('roomName').value.trim()||categoryLabel(type),isLanding=$('roomIsStairwell').checked;
+      pushUndo();
+      const targetName=pos.floor===5?'塔顶':name;
+      const target=addRoom({floor:pos.floor,x:pos.x,y:pos.y,name:targetName,type,hasStairs:$('roomHasStairs').checked&&!isLanding&&pos.floor!==5,isStairwell:isLanding&&pos.floor!==5,entryDir:opposite(dir)});
+      connectRooms(source,target,dir);if(!hub)source.exitDir=dir;
+      player.roomId=target.id;activeFloor=target.floor;triggerChaseIfNeeded(player,target);
+      addLog(`${escapeHtml(player.name)} 从「${escapeHtml(source.name)}」向${dirName(dir)}移动，探索新房间「${escapeHtml(target.name)}」（${categoryLabel(target.type)}${target.isStairwell?'，楼梯间':target.hasStairs?'，内设上行楼梯':''}）。`);
+      $('roomName').value='';$('roomHasStairs').checked=false;$('roomIsStairwell').checked=false;
+      consumeActionPoint(player,'移动');message(`已创建「${target.name}」并打通${dirName(dir)}方向的门，消耗 1 AP。`,'success');save();render();return;
+    }
+    if(dir==='UP'||dir==='DOWN'){
+      const targetFloor=source.floor+(dir==='UP'?1:-1);
+      if(targetFloor<1||targetFloor>5){message('宝塔只有第一层至第五层，无法继续移动。','error');return;}
+      if(dir==='UP'&&source.isStairwell){message('当前房间是楼梯间。楼梯间可以四向扩展，但不能继续向上爬层；请先在本层找到另一个“内设上行楼梯”的普通房间。','error');return;}
+      if(dir==='UP'&&!hasUpStairs(source)){message('当前房间没有上行楼梯。请在“编辑当前房间”中勾选“房间内设有上行楼梯”。只有带楼梯的普通房间可以上楼，抵达上层后会进入楼梯间。','error');return;}
+      const existingLink=hasVerticalLink(source.id,targetFloor);
+      if(dir==='DOWN'&&!existingLink){message('当前房间没有连接到下一层的楼梯入口。只有已建立的楼梯连接才能下楼。','error');return;}
+      if(existingLink){
+        const target=otherRoomInLink(existingLink,source.id);if(!target){message('楼梯连接的数据有误。','error');return;}
+        pushUndo();
+        if(dir==='UP'&&target.floor===5){target.name='塔顶';target.isStairwell=false;target.hasStairs=false;}
+        else if(dir==='UP'&&!target.isStairwell){target.isStairwell=true;target.hasStairs=false;}
+        player.roomId=target.id;activeFloor=target.floor;triggerChaseIfNeeded(player,target);
+        addLog(`${escapeHtml(player.name)} 从第${source.floor}层「${escapeHtml(source.name)}」${dir==='UP'?'沿楼梯上楼':'沿楼梯下楼'}进入第${target.floor}层「${escapeHtml(target.name)}」。`);
+        if(dir==='UP'&&player.hasHorse){player.hasHorse=false;player.horseFloor=null;addLog(`${player.name} 上楼后无法继续使用本层马匹。`);}
+        consumeActionPoint(player,dir==='UP'?'上楼':'下楼');message(`已通过楼梯进入第${target.floor}层「${target.name}」，消耗 1 AP。`,'success');save();render();return;
+      }
+      // UP from a normal room with stairs creates a stairwell landing on the next floor.
+      const sameCoord=roomAt(targetFloor,source.x,source.y),existingOnFloor=state.rooms.find(r=>r.floor===targetFloor);
+      const target=sameCoord||(targetFloor===5?existingOnFloor:null);
+      if(target){
+        pushUndo();
+        if(dir==='UP'&&target.floor===5){target.name='塔顶';target.isStairwell=false;target.hasStairs=false;}
+        else if(dir==='UP'){target.isStairwell=true;target.hasStairs=false;}
+        state.verticalLinks.push({a:source.id,b:target.id});player.roomId=target.id;activeFloor=target.floor;triggerChaseIfNeeded(player,target);
+        addLog(`${escapeHtml(player.name)} 从第${source.floor}层「${escapeHtml(source.name)}」上楼，连接并进入第${target.floor}层${target.floor===5?'塔顶':'楼梯间'}「${escapeHtml(target.name)}」。`);
+        if(player.hasHorse){player.hasHorse=false;player.horseFloor=null;addLog(`${player.name} 上楼后无法继续使用本层马匹。`);}
+        consumeActionPoint(player,'上楼');message(`已连接并进入第${target.floor}层楼梯间「${target.name}」，消耗 1 AP。`,'success');save();render();return;
+      }
+      const type=$('roomType').value;
+      const name=targetFloor===5?'塔顶':($('roomName').value.trim()||`${categoryLabel(type)}楼梯间`);
+      if(targetFloor===5&&state.rooms.some(r=>r.floor===5)){message('第五层已有“塔顶”房间，所有通往第五层的楼梯都应连接到该房间。','error');return;}
+      pushUndo();const newRoom=addRoom({floor:targetFloor,x:source.x,y:source.y,name,type,isStairwell:targetFloor!==5,hasStairs:false,entryDir:null});
+      state.verticalLinks.push({a:source.id,b:newRoom.id});player.roomId=newRoom.id;activeFloor=targetFloor;triggerChaseIfNeeded(player,newRoom);
+      addLog(`${escapeHtml(player.name)} 从第${source.floor}层「${escapeHtml(source.name)}」上楼，发现第${targetFloor}层楼梯间「${escapeHtml(newRoom.name)}」。`);
+      $('roomName').value='';$('roomHasStairs').checked=false;$('roomIsStairwell').checked=false;
+      if(player.hasHorse){player.hasHorse=false;player.horseFloor=null;addLog(`${player.name} 上楼后无法继续使用本层马匹。`);}
+      consumeActionPoint(player,'上楼');message(`已创建第${targetFloor}层楼梯间「${newRoom.name}」并建立楼梯连接。楼梯间可四向扩展，但不能继续上楼。消耗 1 AP。`,'success');save();render();return;
+    }
+  }
+  function roomTypeLabel(room){const base=TYPE_LABELS[room.type]||'空房间';if(room.isStairwell)return `${base} · 楼梯间`;if(room.hasStairs)return `${base} · 有上行楼梯`;return base;}
+  function completeChaseIfAllEscaped(){
+    const chase=chaseState();
+    if(!chase.active||chase.completed)return false;
+    const remaining=state.players.filter(p=>!isWhiteGhost(p)&&!isPlayerEscaped(p));
+    if(remaining.length>0)return false;
+    chase.completed=true;chase.playerVisible=true;chase.awaitingGhostAction=false;chase.ghostTurnStarted=false;
+    chase.ghostActionsTotal=0;chase.ghostActionsRemaining=0;
+    addLog('除慕潇（白鬼）以外的所有玩家均已逃出宝塔，追逐战自动结束。');
+    return true;
+  }
+  function markPlayerEscaped(player,reason='抵达第一层入口'){
+    if(!player||isWhiteGhost(player)||isPlayerEscaped(player))return false;
+    addUnique(chaseState().escapedPlayerIds,player.id);player.apRemaining=0;
+    delete chaseState().boundPlayers[player.id];
+    addLog(`${player.name} ${reason}，已逃出宝塔。`);
+    completeChaseIfAllEscaped();
+    return true;
+  }
+  function bindPlayer(playerId,reason='被白发缠身'){
+    const chase=chaseState(),player=state.players.find(p=>p.id===playerId);
+    if(!player||isWhiteGhost(player)||isPlayerEscaped(player))return false;
+    if(chase.boundPlayers[playerId])return false;
+    chase.boundPlayers[playerId]={turnsRemaining:3,attemptedRound:null,reason,boundRound:chase.round,freshAfterGhost:!!(chase.ghostTurnStarted||chase.awaitingGhostAction)};
+    addLog(`${player.name}被白发束缚（持续 3 回合）：${reason}。每回合力量检定可尝试挣脱。`);
+    return true;
+  }
+  function bindPlayersInRoom(roomId,reason){
+    state.players.forEach(player=>{if(player.roomId===roomId&&!isWhiteGhost(player)&&!isPlayerEscaped(player))bindPlayer(player.id,reason);});
+  }
+  function markEscapeIfAtEntrance(player){
+    if(!player||isPlayerEscaped(player)||isPlayerBound(player.id))return false;
+    const room=roomById(player.roomId);
+    if(room&&room.floor===1&&room.type==='entrance')return markPlayerEscaped(player,'已从第一层入口离开');
+    return false;
+  }
+  function chaseNeighbours(roomId,downOnly=false){
+    const chase=chaseState(),rooms=chase.mapSnapshot?.rooms||state.rooms,links=chase.mapSnapshot?.verticalLinks||state.verticalLinks;
+    const room=rooms.find(r=>r.id===roomId);if(!room)return [];
+    const ids=new Set(Object.values(room.doors||{}));
+    links.forEach(link=>{if(link.a===roomId)ids.add(link.b);else if(link.b===roomId)ids.add(link.a);});
+    return [...ids].map(id=>rooms.find(r=>r.id===id)).filter(r=>r&&(!downOnly||r.floor<=room.floor)&&r.id!==roomId);
+  }
+  function nearestChasePlayer(){
+    const chase=chaseState(),start=chase.hairFrontRoomId;if(!start)return null;
+    // Hair can spread sideways and downward, never upward. Bound PCs are already caught and do not count as a pursuit target.
+    const queue=[[start,0]],seen=new Set([start]),dist=new Map([[start,0]]);
+    while(queue.length){const [id,d]=queue.shift();for(const next of chaseNeighbours(id,true)){if(!seen.has(next.id)){seen.add(next.id);dist.set(next.id,d+1);queue.push([next.id,d+1]);}}}
+    return chaseParticipants().filter(p=>!isPlayerBound(p.id)).map(p=>({player:p,distance:dist.has(p.roomId)?dist.get(p.roomId):Infinity})).sort((a,b)=>a.distance-b.distance)[0]||null;
+  }
+  function chaseDistanceBetween(startId,targetId,downOnly=true){
+    if(!startId||!targetId)return Infinity;if(startId===targetId)return 0;
+    const queue=[[startId,0]],seen=new Set([startId]);
+    while(queue.length){const [id,d]=queue.shift();for(const next of chaseNeighbours(id,downOnly)){if(next.id===targetId)return d+1;if(!seen.has(next.id)){seen.add(next.id);queue.push([next.id,d+1]);}}}
+    return Infinity;
+  }
+  function updateChaseDownStairOptions(){
+    const row=$('chaseDownStairRow');if(!row)return;
+    const source=selectedRoom(),canDescend=!!source&&(isStairwell(source)||source.floor===5),show=!!isChaseActive()&&$('direction').value==='DOWN'&&canDescend&&source.floor>1;
+    row.hidden=!show;if(!show)return;
+    const frozenRooms=chaseState().mapSnapshot?.rooms||state.rooms;
+    const candidates=frozenRooms.filter(r=>r.floor===source.floor-1&&hasUpStairs(r));
+    setOptions('chaseDownStairSelect',candidates.map(r=>({value:r.id,label:`第${r.floor}层 · ${r.name} (${r.x}, ${r.y}) · 上行楼梯`})), $('chaseDownStairSelect').value, candidates.length?'— 任选一个下楼落点 —':'下一层没有可用的上行楼梯');
+    $('chaseDownStairSelect').disabled=candidates.length<=1;
+    if(candidates.length===1)$('chaseDownStairSelect').value=candidates[0].id;
+  }
+  function startChase(){
+    if(!canEdit||VIEW_MODE){setCloudStatus('只有 GM 可以开启追逐战。','error');return;}
+    const chase=chaseState();if(!chase.triggered||!chase.mapLocked||!chase.mapSnapshot){message('追逐战尚未准备好：需要非慕潇玩家抵达塔顶，并等待本轮所有玩家行动结束，地图冻结后才能开启。','error');return;}
+    pushUndo();
+    chase.whiteGhostPlayerId=chase.whiteGhostPlayerId||findWhiteGhost()?.id||null;
+    const top=(chase.mapSnapshot.rooms||[]).find(r=>r.floor===5);
+    if(!top){message('冻结地图中没有第五层塔顶，无法开启追逐战。','error');return;}
+    (chase.mapSnapshot.playerPositions||[]).forEach(pos=>{const p=state.players.find(q=>q.id===pos.playerId);if(p&&roomById(pos.roomId))p.roomId=pos.roomId;});
+    const ghost=state.players.find(p=>p.id===chase.whiteGhostPlayerId);if(ghost)ghost.roomId=top.id;
+    chase.active=true;chase.playerVisible=true;chase.completed=false;chase.awaitingGMStart=false;chase.round=1;
+    chase.hairFrontRoomId=top.id;chase.hairRoomIds=[];chase.boundPlayers={};chase.escapedPlayerIds=[];chase.destroyedFloors=[];
+    chase.ghostTurnStarted=false;chase.awaitingGhostAction=false;chase.ghostActionsTotal=0;chase.ghostActionsRemaining=0;
+    chase.bones={round:1,roll:null,targetPlayerId:null,status:'idle'};chase.startedAt=new Date().toISOString();
+    state.players.forEach(p=>{p.apRemaining=(p.id===chase.whiteGhostPlayerId)?0:p.apPerRound;});
+    // A PC already at the first-floor exit when the chase begins has already escaped.
+    state.players.filter(p=>p.id!==chase.whiteGhostPlayerId).forEach(p=>{const r=roomById(p.roomId);if(r?.floor===1&&r.type==='entrance')markPlayerEscaped(p,'在追逐战开始时已位于第一层入口');});
+    selectedPlayerId=chaseParticipants()[0]?.id||ghost?.id||state.players[0]?.id;
+    activeFloor=5;state.round=Math.max(1,Number(state.round)||1);
+    addLog('宝塔正在塌陷，请全力逃亡！GM 已开启追逐战，当前探索地图被冻结为追逐战地图。');
+    handleActionRoundBoundary();save();render();message('追逐战已开启，红色警报已同步到玩家端。','success');
+  }
+  function toggleChaseNotice(){
+    if(!canEdit||!isChaseActive())return;
+    const chase=chaseState();pushUndo();chase.playerVisible=!chase.playerVisible;
+    addLog(chase.playerVisible?'GM 重新显示了玩家端追逐战警报。':'GM 暂时隐藏了玩家端追逐战警报。');
+    save();render();message(chase.playerVisible?'已向玩家显示追逐战界面。':'已暂时隐藏玩家端追逐战界面；追逐战仍在继续。','success');
+  }
+  function finishChase(){
+    if(!canEdit||!isChaseActive())return;
+    if(!confirm('确定结束追逐战并关闭玩家端红色警报吗？当前追逐状态会保留在地图数据中。'))return;
+    pushUndo();const chase=chaseState();chase.active=false;chase.playerVisible=false;chase.completed=true;chase.awaitingGhostAction=false;chase.ghostTurnStarted=false;
+    addLog('GM 手动结束追逐战。');save();render();message('追逐战已结束。','success');
+  }
+  function startGhostTurn(){
+    const chase=chaseState();if(!canEdit||!chase.active)return;
+    if(!chase.awaitingGhostAction){message('需要等待所有仍在塔内的玩家用完 AP 或结束本轮，白鬼才能最后行动。','error');return;}
+    if(chase.ghostTurnStarted){message('本轮白鬼行动已经开始。','error');return;}
+    const count=Number($('ghostActionsInput').value);
+    if(!Number.isInteger(count)||count<1||count>3){message('请先使用外部骰子掷出 1d3，并将结果填写为 1、2 或 3。','error');$('ghostActionsInput').focus();return;}
+    pushUndo();chase.ghostActionsTotal=count;chase.ghostActionsRemaining=count;chase.ghostTurnStarted=true;chase.awaitingGhostAction=false;
+    addLog(`GM 录入白鬼本轮行动点数：${count}（外部骰子结果），可执行 ${count} 次白发行动。`);save();render();message(`已记录白鬼本轮 ${count} 次行动。`,'success');
+  }
+  function isGhostActionAvailable(){const c=chaseState();return canEdit&&c.active&&c.ghostTurnStarted&&c.ghostActionsRemaining>0;}
+  function spendGhostAction(description){
+    const c=chaseState();if(!isGhostActionAvailable()){message('当前没有可用的白鬼行动次数。请等待玩家行动结束，再录入外部骰子的 1d3 结果。','error');return false;}
+    c.ghostActionsRemaining=Math.max(0,c.ghostActionsRemaining-1);addLog(`白鬼行动：${description}。剩余白鬼行动 ${c.ghostActionsRemaining}/${c.ghostActionsTotal}。`);return true;
+  }
+  function spreadHair(){
+    if(!canManage()||!isGhostActionAvailable())return;
+    const chase=chaseState(),front=chaseMapRoomById(chase.hairFrontRoomId),target=chaseMapRoomById($('hairNextRoomSelect').value);
+    if(!front||!target){message('请选择白发下一步要蔓延到的房间。','error');return;}
+    if(!chaseNeighbours(front.id,true).some(r=>r.id===target.id)){message('白发只能沿冻结地图中已存在的门或向下楼梯蔓延。','error');return;}
+    // Do not compare a candidate's downward-only distance back to a PC on an upper floor:
+    // that reverse search necessarily fails and previously blocked hair from entering floor 1.
+    // The actual safety rule is that the next room must be an explored same-floor door or lower-floor stair link.
+    pushUndo();addUnique(chase.hairRoomIds,front.id);addUnique(chase.hairRoomIds,target.id);chase.hairFrontRoomId=target.id;
+    bindPlayersInRoom(front.id,'白发在该房间蔓延');bindPlayersInRoom(target.id,'白发蔓延进入该房间');
+    if(!spendGhostAction(`白发由「${front.name}」向下蔓延至「${target.name}」`))return;
+    save();render();message(`白发已占据第${target.floor}层「${target.name}」。`,'success');
+  }
+  function ghostAttack(){
+    if(!canManage()||!isGhostActionAvailable())return;
+    const player=state.players.find(p=>p.id===$('ghostAttackTarget').value);
+    if(!player||isWhiteGhost(player)||isPlayerEscaped(player)){message('请选择仍在塔内的玩家作为攻击目标。','error');return;}
+    if(isPlayerBound(player.id)){message(`「${player.name}」已经被白发束缚，白鬼应选择其他玩家或让白发继续蔓延。`,'error');return;}
+    pushUndo();bindPlayer(player.id,'慕潇（白鬼）主动攻击');
+    if(!spendGhostAction(`攻击玩家「${player.name}」，以白发将其束缚`))return;
+    save();render();message(`白鬼已使用一次行动，将「${player.name}」束缚 3 回合。`,'success');
+  }
+  function recordStrengthCheck(success){
+    if(!canManage()||!isChaseActive())return;
+    const chase=chaseState(),playerId=$('boundPlayerSelect').value,player=state.players.find(p=>p.id===playerId),binding=chase.boundPlayers[playerId];
+    if(!player||!binding){message('当前没有选定的被束缚玩家。','error');return;}
+    if(binding.attemptedRound===chase.round){message(`「${player.name}」本追逐回合已经记录过力量检定。`,'error');return;}
+    pushUndo();binding.attemptedRound=chase.round;binding.lastCheck=success?'success':'failed';
+    if(success){delete chase.boundPlayers[playerId];addLog(`${player.name} 本回合力量检定成功，挣脱白发束缚。`);markEscapeIfAtEntrance(player);}
+    else addLog(`${player.name} 本回合力量检定失败，仍被白发束缚；白鬼回合结算时将受到 2d3 伤害。`);
+    save();render();message(success?`「${player.name}」已挣脱。`:`已记录「${player.name}」本回合力量检定失败。`,'success');
+  }
+  function rescueBoundPlayer(){
+    if(!canManage()||!isChaseActive())return;
+    const chase=chaseState(),helperId=$('rescueHelperSelect').value,helper=state.players.find(p=>p.id===helperId),target=state.players.find(p=>p.id===$('rescueTargetSelect').value);
+    const isNpc=helperId==='__npc__',npcName=$('rescueNpcName').value.trim();
+    if(!target||!chase.boundPlayers[target.id]){message('请选择有效的被束缚目标。','error');return;}
+    if(isNpc&&!npcName){message('请填写参与救援的 NPC 名称。','error');$('rescueNpcName').focus();return;}
+    if(!isNpc&&(!helper||!chaseParticipants().some(p=>p.id===helper.id)||isPlayerBound(helper.id)||helper.apRemaining<=0)){message('救援者必须仍在塔内、未被束缚且至少有 1 AP。','error');return;}
+    if(helper&&helper.id===target.id){message('玩家不能救援自己。','error');return;}
+    if(chase.awaitingGhostAction||chase.ghostTurnStarted){message('白鬼行动阶段不能再执行玩家救援行动。','error');return;}
+    pushUndo();delete chase.boundPlayers[target.id];
+    const helperName=isNpc?`NPC「${npcName}」`:helper.name;
+    addLog(`${helperName} 通过力量检定将 ${target.name} 从白发中拉出。`);markEscapeIfAtEntrance(target);
+    if(!isNpc)consumeActionPoint(helper,`成功救援被束缚的 ${target.name}`);
+    save();render();message(isNpc?`NPC「${npcName}」已将「${target.name}」拉出白发。`:`「${helper.name}」已将「${target.name}」拉出白发，救援者消耗 1 AP。`,'success');
+  }
+  function rollWallBones(){
+    if(!canEdit||!isChaseActive())return;
+    const chase=chaseState();if(chase.bones?.status==='battle'){message('当前仍有玩家在与白骨战斗，请先结束该战斗。','error');return;}
+    if(chase.bones?.round===chase.round&&chase.bones.status!=='idle'){message('本追逐回合已经记录过墙中白骨的攻击目标。','error');return;}
+    const target=state.players.find(p=>p.id===$('wallBonesTargetSelect').value);
+    if(!target||isWhiteGhost(target)||isPlayerEscaped(target)){message('请先手动选择一名仍在塔内、尚未逃出的玩家作为白骨攻击目标。','error');return;}
+    pushUndo();chase.bones={round:chase.round,roll:null,targetPlayerId:target.id,status:'pending'};
+    addLog(`GM 使用外部骰子确定墙中白骨攻击目标：${target.name}。请根据实际敏捷检定记录结果；网页不掷 d4。`);save();render();message(`已记录墙中白骨攻击目标：${target.name}。`,'success');
+  }
+  function resolveWallBones(outcome){
+    if(!canEdit||!isChaseActive())return;
+    const chase=chaseState(),bones=chase.bones,player=state.players.find(p=>p.id===bones?.targetPlayerId);
+    if(!player||bones.status!=='pending'){message('当前没有等待判定的白骨攻击。','error');return;}
+    pushUndo();
+    if(outcome==='dodged'){
+      bones.status='dodged';addLog(`${player.name} 敏捷判定成功，躲开了墙中白骨。`);message(`「${player.name}」成功躲开白骨。`,'success');
+    }else{
+      bones.status='battle';addLog(`${player.name} 敏捷判定失败，陷入墙中白骨战斗轮；战斗结束前无法移动。`);message(`「${player.name}」进入白骨战斗轮。`,'error');
+    }
+    save();render();
+  }
+  function resolveBonesCombat(){
+    if(!canManage()||!isChaseActive())return;
+    const c=chaseState();if(c.bones?.status!=='battle'){message('当前没有未结束的白骨战斗。','error');return;}
+    pushUndo();const oldBones={...c.bones},p=state.players.find(q=>q.id===oldBones.targetPlayerId);addLog(`${p?.name||'玩家'} 的墙中白骨战斗已结束，解除移动限制。`);
+    c.bones=oldBones.round===c.round?{...oldBones,status:'resolved'}:{round:c.round,roll:null,targetPlayerId:null,status:'idle'};
+    save();render();message('白骨战斗限制已解除。','success');
+  }
+  function floorEscapeEndpoints(floor){
+    const rooms=chaseState().mapSnapshot?.rooms||state.rooms,links=chaseState().mapSnapshot?.verticalLinks||state.verticalLinks;
+    const byId=id=>rooms.find(r=>r.id===id);
+    const starts=rooms.filter(r=>r.floor===floor&&(floor===1?r.type==='entrance':links.some(link=>{const otherId=link.a===r.id?link.b:link.b===r.id?link.a:null;const other=otherId?byId(otherId):null;return other&&other.floor===floor-1;})));
+    const targets=rooms.filter(r=>r.floor===floor&&links.some(link=>{const otherId=link.a===r.id?link.b:link.b===r.id?link.a:null;const other=otherId?byId(otherId):null;return other&&other.floor===floor+1;}));
+    return {rooms,starts,targets};
+  }
+  function isFloorCutOffByHair(floor){
+    if(!isChaseActive()||floor<1||floor>4)return false;
+    const {rooms,starts,targets}=floorEscapeEndpoints(floor);if(!starts.length||!targets.length)return false;
+    const ids=new Set(rooms.filter(r=>r.floor===floor).map(r=>r.id)),hair=new Set(chaseState().hairRoomIds);
+    const pathExists=(ignoreHair)=>{
+      const queue=starts.filter(r=>ignoreHair||!hair.has(r.id)).map(r=>r.id),seen=new Set(queue);
+      while(queue.length){const id=queue.shift();if(targets.some(t=>t.id===id)&&(ignoreHair||!hair.has(id)))return true;const room=rooms.find(r=>r.id===id);for(const toId of Object.values(room?.doors||{})){if(ids.has(toId)&&(ignoreHair||!hair.has(toId))&&!seen.has(toId)){seen.add(toId);queue.push(toId);}}}
+      return false;
+    };
+    if(!pathExists(true))return false;
+    return !pathExists(false);
+  }
+  function declareFloorDestroyed(){
+    if(!canEdit||!isChaseActive())return;
+    const floor=Number($('destroyFloorSelect').value),chase=chaseState();
+    if(chase.destroyedFloors.includes(floor)){message(`第 ${floor} 层已经宣告摧毁。`,'info');return;}
+    if(!isFloorCutOffByHair(floor)){message(`第 ${floor} 层仍存在未被白发占据的路径，尚不满足“摧毁”条件。`,'error');return;}
+    pushUndo();addUnique(chase.destroyedFloors,floor);addLog(`第 ${floor} 层，摧毁。`);save();render();message(`第 ${floor} 层，摧毁。该宣告已同步到玩家端。`,'error');
+  }
+  function finishGhostTurn(){
+    if(!canEdit||!isChaseActive())return;
+    const chase=chaseState();if(!chase.ghostTurnStarted||chase.ghostActionsRemaining>0){message('请先按手动填写的白鬼行动点数完成所有行动，才能结束本轮。','error');return;}
+    if(chase.bones?.status==='pending'){message('墙中白骨的敏捷检定尚未记录，请先记录躲开或陷入战斗轮。','error');return;}
+    pushUndo();
+    Object.entries(chase.boundPlayers).forEach(([playerId,binding])=>{
+      const p=state.players.find(q=>q.id===playerId);if(!p)return;
+      if(binding.freshAfterGhost){binding.freshAfterGhost=false;return;}
+      addLog(`${p.name} 本轮仍未挣脱白发束缚，应受到 2d3 伤害。请 GM 使用外部骰子掷骰并在角色记录中处理伤害；网页不掷骰、不计算伤害。`);
+      binding.turnsRemaining=Math.max(0,(Number(binding.turnsRemaining)||1)-1);
+      if(binding.turnsRemaining<=0){delete chase.boundPlayers[playerId];addLog(`${p.name} 的三回合白发束缚持续时间结束。`);markEscapeIfAtEntrance(p);}
+    });
+    chase.round+=1;state.round=Math.max(Number(state.round)||1,chase.round);
+    chase.ghostTurnStarted=false;chase.awaitingGhostAction=false;chase.ghostActionsTotal=0;chase.ghostActionsRemaining=0;
+    $('ghostActionsInput').value='';
+    state.players.forEach(p=>{p.apRemaining=(isWhiteGhost(p)||isPlayerEscaped(p))?0:p.apPerRound;});
+    if(chase.bones?.status!=='battle')chase.bones={round:chase.round,roll:null,targetPlayerId:null,status:'idle'};
+    const participants=chaseParticipants();
+    if(!participants.length)completeChaseIfAllEscaped();
+    else addLog(`白鬼行动结束，进入追逐战第 ${chase.round} 轮。未逃脱玩家恢复各自 AP。`);
+    save();render();message(chase.completed?'所有玩家均已逃出宝塔！':'白鬼行动结束，新一轮开始。','success');
+  }
+  function renderChaseUI(){
+    const chase=chaseState(),panel=$('chaseAdminPanel'),banner=$('chaseAlertBanner');
+    const showAdmin=!!canEdit&&!VIEW_MODE;panel.hidden=!showAdmin;panel.style.display=showAdmin?'':'none';
+    const chaseVisibleToClient=!!chase.active&&(!VIEW_MODE||!!chase.playerVisible);
+    document.body.classList.toggle('chase-active',chaseVisibleToClient);
+    document.body.classList.toggle('chase-pending',!!chase.mapLocked&&!chase.active&&!chase.completed);
+    const showBanner=!!chase.active&&!!chase.playerVisible;
+    banner.hidden=!showBanner;banner.style.display=showBanner?'':'none';
+    if(showBanner){
+      $('chaseAlertTitle').textContent=chase.completed?'你们已逃出宝塔！':'宝塔正在塌陷，请全力逃亡！';
+      $('chaseAlertSubtitle').textContent=chase.completed?'追逐战已经结束，请确认所有玩家均已安全离开。':'沿已经探索的道路向下逃离，尽快回到第一层入口。白发会不断占据经过的房间。';
+      const destroyed=chase.destroyedFloors||[];const latest=destroyed.length?destroyed[destroyed.length-1]:null;
+      $('chaseAlertMessage').hidden=latest===null;$('chaseAlertMessage').textContent=latest===null?'':`第 ${latest} 层，摧毁。`;
+    }
+    let status='等待触发条件';
+    if(chase.active)status=chase.completed?'追逐战已结束':chase.playerVisible?'追逐战进行中 · PL 已收到警报':'追逐战进行中 · PL 提示已隐藏';
+    else if(chase.mapLocked)status='地图已冻结 · 等待 GM 开启';
+    else if(chase.triggered)status='已触发 · 等待本轮行动结束';
+    $('chaseStatusBadge').textContent=status;
+    $('chaseAdminStatus').textContent=chase.active?`追逐战第 ${chase.round} 轮。地图已冻结，白鬼本体不移动；白发前沿所在房间：${chaseMapRoomById(chase.hairFrontRoomId)?.name||'塔顶'}。${chase.awaitingGhostAction?'所有未逃脱玩家已完成行动，轮到白鬼。':chase.ghostTurnStarted?`白鬼行动中，剩余 ${chase.ghostActionsRemaining}/${chase.ghostActionsTotal} 次行动。`:'玩家可独立行动，所有玩家结束后由白鬼最后行动。'}`:chase.mapLocked?'已满足塔顶触发条件，且本轮所有玩家行动结束。探索地图已冻结为追逐战地图；玩家端尚未看到追逐战提示。':chase.triggered?`非慕潇玩家（${state.players.find(p=>p.id===chase.triggeredByPlayerId)?.name||'玩家'}）已抵达塔顶，触发条件已满足。等待本轮所有玩家用完 AP 或结束行动，地图才会被冻结。`:'当非慕潇玩家抵达第五层“塔顶”，且本轮所有玩家行动结束后，追逐战地图将被冻结。只有 GM 手动开启后，PL 端才会显示红色警报。';
+    $('startChaseBtn').disabled=!canEdit||!chase.mapLocked||!!chase.active;
+    $('toggleChaseNoticeBtn').hidden=!chase.active;$('toggleChaseNoticeBtn').textContent=chase.playerVisible?'隐藏玩家端提示':'向玩家显示追逐战提示';
+    $('finishChaseBtn').hidden=!chase.active;
+    $('chaseActiveControls').hidden=!chase.active;
+    updateChaseDownStairOptions();
+    if(!chase.active){$('rescueNpcRow').hidden=true;return;}
+    $('chaseRoundChip').textContent=`追逐战第 ${chase.round} 轮`;
+    $('chaseEscapeChip').textContent=`已逃出 ${chase.escapedPlayerIds.length} 人`;
+    $('chaseHairChip').textContent=`白发占据 ${chase.hairRoomIds.length} 个房间`;
+    const ghost=state.players.find(p=>p.id===chase.whiteGhostPlayerId);
+    let turnStatus=chase.completed?'除慕潇以外的所有玩家均已逃离宝塔，追逐战完成。':chase.awaitingGhostAction?'所有仍在塔内的玩家均已结束行动，请填写外部骰子掷出的白鬼行动点数。':chase.ghostTurnStarted?`白鬼本轮有 ${chase.ghostActionsTotal} 次行动，已使用 ${chase.ghostActionsTotal-chase.ghostActionsRemaining} 次，剩余 ${chase.ghostActionsRemaining} 次。`:'等待仍在塔内的玩家消耗 AP 或结束本轮行动。';
+    $('ghostTurnStatus').textContent=`白鬼：${ghost?.name||'未找到慕潇'}（本体固定在塔顶）。${turnStatus}`;
+    $('rollGhostActionsBtn').disabled=!chase.awaitingGhostAction||chase.ghostTurnStarted||chase.completed;
+    $('ghostActionsInput').disabled=!chase.awaitingGhostAction||chase.ghostTurnStarted||chase.completed;
+    if(chase.ghostActionsTotal>0&&chase.ghostTurnStarted)$('ghostActionsInput').value=String(Math.min(3,chase.ghostActionsTotal));
+    $('endGhostTurnBtn').disabled=!chase.ghostTurnStarted||chase.ghostActionsRemaining>0||chase.completed;
+    const canGhost=isGhostActionAvailable();$('spreadHairBtn').disabled=!canGhost;$('ghostAttackBtn').disabled=!canGhost;
+    const front=chaseMapRoomById(chase.hairFrontRoomId);const near=nearestChasePlayer();
+    $('nearestPlayerStatus').textContent=near?`白发前沿位于「${front?.name||'未知'}」；当前最近目标：${near.player.name}（按已探索连接计算距离 ${Number.isFinite(near.distance)?near.distance:'未知'} 格）。`:'白发前沿尚无可追逐的玩家。';
+    const hairNeighbors=front?chaseNeighbours(front.id,true):[];
+    if(near)hairNeighbors.sort((a,b)=>{
+      const da=chaseDistanceBetween(a.id,near.player.roomId,false),db=chaseDistanceBetween(b.id,near.player.roomId,false);
+      const hairA=chase.hairRoomIds.includes(a.id)?1:0,hairB=chase.hairRoomIds.includes(b.id)?1:0;
+      return da-db||hairA-hairB;
+    });
+    const suggestedHairRoom=hairNeighbors[0]?.id||'';
+    setOptions('hairNextRoomSelect',hairNeighbors.map((r,i)=>({value:r.id,label:`第${r.floor}层 · ${r.name} (${r.x}, ${r.y})${i===0&&near?' · 推荐追逐路径':chase.hairRoomIds.includes(r.id)?' · 白发已经过':''}`})), suggestedHairRoom||$('hairNextRoomSelect').value,'没有可向下蔓延的相邻房间');
+    const activeTargets=chaseParticipants().filter(p=>!isPlayerBound(p.id)).map(p=>({value:p.id,label:`${p.name} · ${chaseMapRoomById(p.roomId)?.name||'未知位置'}`}));
+    setOptions('ghostAttackTarget',activeTargets,$('ghostAttackTarget').value,'没有可攻击的玩家');
+    const bound=Object.keys(chase.boundPlayers).map(id=>state.players.find(p=>p.id===id)).filter(Boolean);
+    setOptions('boundPlayerSelect',bound.map(p=>({value:p.id,label:`${p.name} · 剩余束缚 ${chase.boundPlayers[p.id].turnsRemaining} 回合`})), $('boundPlayerSelect').value,'目前无人被束缚');
+    const helpers=chaseParticipants().filter(p=>!isPlayerBound(p.id)&&p.apRemaining>0&&!(chase.bones?.status==='battle'&&chase.bones.targetPlayerId===p.id));
+    const helperOptions=helpers.map(p=>({value:p.id,label:`${p.name} · AP ${p.apRemaining}/${p.apPerRound}`}));
+    helperOptions.push({value:'__npc__',label:'NPC（场上 NPC，GM 指定）'});
+    setOptions('rescueHelperSelect',helperOptions, $('rescueHelperSelect').value,'没有可行动的救援者');
+    $('rescueNpcRow').hidden=$('rescueHelperSelect').value!=='__npc__';
+    setOptions('rescueTargetSelect',bound.map(p=>({value:p.id,label:p.name})), $('rescueTargetSelect').value,'目前无人被束缚');
+    $('breakFreeSuccessBtn').disabled=!bound.length;$('breakFreeFailBtn').disabled=!bound.length;refreshRescueControls();
+    $('rescueBoundBtn').disabled=!bound.length||$('rescueBoundBtn').disabled;
+    if(bound.length){$('bindingStatus').textContent=bound.map(p=>`${p.name}：剩余 ${chase.boundPlayers[p.id].turnsRemaining} 回合${chase.boundPlayers[p.id].attemptedRound===chase.round?'（本轮已检定）':''}`).join('；')+'。未在白鬼回合前挣脱者会受到 2d3 伤害。';}
+    else $('bindingStatus').textContent='目前没有玩家被白发束缚。';
+    const bones=chase.bones||{};const bonesTarget=state.players.find(p=>p.id===bones.targetPlayerId);
+    const bonesTargets=chaseParticipants().map(p=>({value:p.id,label:`${p.name} · ${chaseMapRoomById(p.roomId)?.name||'未知位置'}`}));
+    setOptions('wallBonesTargetSelect',bonesTargets,$('wallBonesTargetSelect').value,'— 手动选择本轮被攻击玩家 —');
+    $('wallBonesTargetSelect').disabled=chase.completed||bones.status==='battle'||(bones.round===chase.round&&bones.status!=='idle');
+    $('rollBonesBtn').disabled=chase.completed||bones.status==='battle'||(bones.round===chase.round&&bones.status!=='idle');
+    $('bonesDodgeBtn').disabled=bones.status!=='pending';$('bonesFailBtn').disabled=bones.status!=='pending';$('resolveBonesBtn').disabled=bones.status!=='battle';
+    $('bonesStatus').textContent=bones.status==='pending'?`本回合白骨攻击目标：${bonesTarget?.name||'未知'}。等待 GM 根据外部敏捷检定记录结果。`:bones.status==='battle'?`${bonesTarget?.name||'玩家'}未能躲开白骨，正处于白骨战斗轮；战斗结束前不能移动。`:bones.status==='dodged'?`${bonesTarget?.name||'玩家'}已成功躲开本轮白骨攻击。`:bones.status==='resolved'?`本轮白骨战斗已解除。`:'本追逐回合尚未记录墙中白骨的攻击目标。';
+    const destroyed=chase.destroyedFloors||[];$('destroyedFloorStatus').textContent=destroyed.length?destroyed.slice().sort((a,b)=>a-b).map(f=>`第 ${f} 层，摧毁。`).join(' '):'尚无楼层被宣告摧毁。';
+    const destroyFloor=Number($('destroyFloorSelect').value);$('destroyFloorBtn').disabled=chase.completed||destroyed.includes(destroyFloor);
+  }
+  function renderPlayers(){
+    const sorted=[...state.players];
+    $('playerCountLabel').textContent=`${state.players.length} 名玩家`;
+    $('removePlayerBtn').disabled=state.players.length<=1;
+    $('removePlayerBtn').style.opacity=state.players.length<=1?'.5':'1';
+    $('playerList').innerHTML=sorted.map(p=>{
+      const r=roomById(p.roomId), active=p.id===selectedPlayerId, done=p.apRemaining<=0;
+      return `<button class="player-row ${active?'active':''} ${done?'ap-done':''}" data-player="${escapeHtml(p.id)}"><span class="avatar" style="background:${p.color}">${escapeHtml(p.name.slice(0,1))}</span><span class="player-main"><span class="player-name">${escapeHtml(p.name)}</span><span class="player-pos">${escapeHtml(r?`第${r.floor}层 · ${r.name}`:'位置未知')}</span><span class="round-status ${done?'done':'ready'}">${done?'本轮已结束':'可独立行动'}</span></span><span class="dex">DEX ${Number(p.dex)||0}<br><span class="ap-pill">AP ${p.apRemaining}/${p.apPerRound}</span></span></button>`;
+    }).join('');
+    $('playerList').querySelectorAll('[data-player]').forEach(btn=>btn.addEventListener('click',()=>{if(currentHorseRide().active&&btn.dataset.player!==currentHorseRide().playerId){message('骑马路线尚未结算，不能切换其他玩家。请先停止骑行。','error');return;}selectedPlayerId=btn.dataset.player; const r=selectedRoom(); if(r)activeFloor=r.floor; render();}));
+    const p=selectedPlayer();
+    $('playerEdit').innerHTML=`<div class="field"><label for="editName">玩家名称</label><input id="editName" maxlength="24" value="${escapeHtml(p.name)}"></div><div class="field"><label for="editDex">DEX 数值</label><input id="editDex" type="number" min="0" max="999" value="${Number(p.dex)||0}"></div><div class="field"><label for="editApPerRound">每回合行动点数（1–20）</label><input id="editApPerRound" type="number" min="1" max="20" value="${Number(p.apPerRound)||2}"></div><div class="tiny" style="margin:0 0 11px">当前所在地：${escapeHtml(locationLabel(roomById(p.roomId)))}；本轮剩余 ${p.apRemaining}/${p.apPerRound} AP。</div><button id="savePlayerBtn" class="btn btn-soft" style="width:100%">保存玩家信息</button>`;
+    $('savePlayerBtn').addEventListener('click',()=>{
+      if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}
+      const newName=$('editName').value.trim(); if(!newName){message('玩家名称不能为空。','error');return;}
+      p.name=newName; p.dex=Math.max(0,Math.min(999,Number($('editDex').value)||0));
+      const oldMax=Number(p.apPerRound)||2,oldRemaining=Number(p.apRemaining)||0;
+      const nextMax=Math.max(1,Math.min(20,Math.floor(Number($('editApPerRound').value)||2)));
+      const spentThisRound=Math.max(0,oldMax-oldRemaining);
+      p.apPerRound=nextMax;p.apRemaining=oldRemaining<=0?0:Math.max(0,Math.min(nextMax,nextMax-spentThisRound));
+      if(state.players.length&&state.players.every(x=>x.apRemaining<=0)){
+        state.round=(Number(state.round)||1)+1;state.players.forEach(x=>x.apRemaining=x.apPerRound);
+        addLog(`GM 调整行动点后，本轮所有玩家 AP 均为 0，自动进入第 ${state.round} 轮。`);
+      }
+      state.currentPlayerId=p.id;selectedPlayerId=p.id;
+      save();render();message('玩家信息和每回合行动点数已保存。新设置已按本轮已消耗的行动次数调整，下一轮也将按新值重置。','success');
+    });
+  }
+  function renderFloorTabs(){
+    const chaseVisible=!!chaseState().active&&(!VIEW_MODE||!!chaseState().playerVisible);
+    $('floorTabs').innerHTML=[1,2,3,4,5].map(f=>{
+      const destroyed=chaseVisible&&chaseState().destroyedFloors.includes(f);
+      const count=(chaseState().active&&chaseState().mapSnapshot?.rooms?chaseState().mapSnapshot.rooms:state.rooms).filter(r=>r.floor===f).length;
+      return `<button class="floor-tab ${f===activeFloor?'active':''} ${destroyed?'destroyed':''}" data-floor="${f}">${destroyed?'⚠ ':''}第${f}层 <span class="count">${count}</span>${destroyed?' · 摧毁':''}</button>`;
+    }).join('');
+    $('floorTabs').querySelectorAll('[data-floor]').forEach(btn=>btn.addEventListener('click',()=>{activeFloor=Number(btn.dataset.floor);render();}));
+    const p=selectedPlayer(), r=roomById(p.roomId);
+    $('mapStats').innerHTML=`<span>当前玩家：<strong>${escapeHtml(p.name)}</strong></span><span>所在位置：<strong>${escapeHtml(r?.name||'未知')}</strong></span><span>本层房间：<strong>${(chaseState().active&&chaseState().mapSnapshot?.rooms?chaseState().mapSnapshot.rooms:state.rooms).filter(room=>room.floor===activeFloor).length}</strong></span>`;
+  }
+  function clampMapZoom(value){return Math.min(MAP_ZOOM_MAX,Math.max(MAP_ZOOM_MIN,Math.round(value*1000)/1000));}
+  function updateMapZoomUI(){if($('mapZoomValue'))$('mapZoomValue').textContent=`${Math.round(mapZoom*100)}%`;if($('mapZoomOutBtn'))$('mapZoomOutBtn').disabled=mapZoom<=MAP_ZOOM_MIN;if($('mapZoomInBtn'))$('mapZoomInBtn').disabled=mapZoom>=MAP_ZOOM_MAX;}
+  function applyMapViewport(){
+    const svg=$('mapCanvas')?.querySelector('svg');if(!svg){updateMapZoomUI();return;}
+    svg.setAttribute('viewBox',`${mapView.x} ${mapView.y} ${mapView.w} ${mapView.h}`);svg.setAttribute('preserveAspectRatio','xMidYMid meet');updateMapZoomUI();
+  }
+  function resetMapViewport(){mapZoom=1;mapView={x:0,y:0,w:mapBase.w,h:mapBase.h};applyMapViewport();}
+  function fitMapZoom(){mapZoom=1;mapView={x:0,y:0,w:mapBase.w,h:mapBase.h};applyMapViewport();}
+  function zoomMapAt(nextZoom,clientX,clientY){
+    const wrap=document.querySelector('.map-wrap'),svg=$('mapCanvas')?.querySelector('svg');if(!wrap||!svg)return;
+    nextZoom=clampMapZoom(nextZoom);const rect=svg.getBoundingClientRect(),ratio=nextZoom/mapZoom;if(!isFinite(ratio)||ratio<=0)return;
+    const px=clientX==null?.5:Math.min(1,Math.max(0,(clientX-rect.left)/Math.max(1,rect.width)));
+    const py=clientY==null?.5:Math.min(1,Math.max(0,(clientY-rect.top)/Math.max(1,rect.height)));
+    const anchorX=mapView.x+px*mapView.w,anchorY=mapView.y+py*mapView.h,newW=mapView.w/ratio,newH=mapView.h/ratio;
+    mapView={x:anchorX-px*newW,y:anchorY-py*newH,w:newW,h:newH};mapZoom=nextZoom;applyMapViewport();
+  }
+  function setMapZoom(value){const r=document.querySelector('.map-wrap')?.getBoundingClientRect();zoomMapAt(value,r?r.left+r.width/2:null,r?r.top+r.height/2:null);}
+  function bindMapViewport(){
+    const wrap=document.querySelector('.map-wrap');if(!wrap||wrap.dataset.viewportBound)return;wrap.dataset.viewportBound='1';
+    wrap.addEventListener('wheel',e=>{if(!$('mapCanvas')?.querySelector('svg'))return;e.preventDefault();zoomMapAt(mapZoom*(e.deltaY<0?1.16:1/1.16),e.clientX,e.clientY);},{passive:false});
+    wrap.addEventListener('pointerdown',e=>{if(e.button!==0||!$('mapCanvas')?.querySelector('svg'))return;mapPan={id:e.pointerId,x:e.clientX,y:e.clientY,view:{...mapView}};wrap.setPointerCapture(e.pointerId);wrap.classList.add('is-panning');});
+    wrap.addEventListener('pointermove',e=>{if(!mapPan||mapPan.id!==e.pointerId)return;const rect=wrap.getBoundingClientRect();mapView.x=mapPan.view.x-(e.clientX-mapPan.x)*mapPan.view.w/Math.max(1,rect.width);mapView.y=mapPan.view.y-(e.clientY-mapPan.y)*mapPan.view.h/Math.max(1,rect.height);applyMapViewport();});
+    const end=e=>{if(!mapPan||mapPan.id!==e.pointerId)return;mapPan=null;wrap.classList.remove('is-panning');};wrap.addEventListener('pointerup',end);wrap.addEventListener('pointercancel',end);
+  }
+  function renderMap(){
+    const container=$('mapCanvas'), displayRooms=chaseState().active&&chaseState().mapSnapshot?.rooms?chaseState().mapSnapshot.rooms:state.rooms, rooms=displayRooms.filter(r=>r.floor===activeFloor);
+    const displayRoomById=id=>displayRooms.find(r=>r.id===id)||roomById(id);
+    const showHair=chaseState().active&&(!VIEW_MODE||chaseState().playerVisible);
+    const hairSet=new Set(showHair?chaseState().hairRoomIds:[]);
+    if(!rooms.length){container.innerHTML=`<div class="empty-map"><div class="symbol">◇</div><strong>第${activeFloor}层尚未探索</strong><div class="tiny" style="margin-top:6px">找到楼梯并执行“上楼”，即可创建这一层的第一个房间。</div></div>`;return;}
+    const minX=Math.min(...rooms.map(r=>r.x)),maxX=Math.max(...rooms.map(r=>r.x)),minY=Math.min(...rooms.map(r=>r.y)),maxY=Math.max(...rooms.map(r=>r.y));
+    const roomW=132,roomH=92,stepX=178,stepY=140,pad=42;
+    const width=pad*2+(maxX-minX)*stepX+roomW,height=pad*2+(maxY-minY)*stepY+roomH;
+    const point=r=>({x:pad+(r.x-minX)*stepX,y:pad+(r.y-minY)*stepY});
+    const esc=escapeHtml;
+    let links='';
+    rooms.forEach(r=>Object.entries(r.doors||{}).forEach(([d,id])=>{
+      const to=displayRoomById(id);if(!to||to.floor!==activeFloor||r.id>to.id)return;
+      const a=point(r),b=point(to);
+      links+=`<line x1="${a.x+roomW/2}" y1="${a.y+roomH/2}" x2="${b.x+roomW/2}" y2="${b.y+roomH/2}" stroke="#3677f5" stroke-width="7" stroke-linecap="round" opacity=".9"/>`;
+    }));
+    let tiles='';
+    rooms.forEach(r=>{
+      const pos=point(r), herePlayers=state.players.filter(p=>p.roomId===r.id),hairOccupied=hairSet.has(r.id);
+      const fill=hairOccupied?'#ffe4e2':r.type==='entrance'?'#e9f7f3':isStairwell(r)?'#fff4df':r.hasStairs?'#eef6ff':r.type==='treasure'?'#fff8dd':r.type==='abyss'?'#edf2ff':'#ffffff';
+      const stroke=hairOccupied?'#b42318':r.type==='entrance'?'#0f9b8e':isStairwell(r)?'#d97706':r.hasStairs?'#3677f5':'#cdd6e4';
+      let marker='';
+      const markerGap=22, total=herePlayers.length, startX=pos.x+roomW/2-((total-1)*markerGap)/2;
+      herePlayers.forEach((p,i)=>{const cx=startX+i*markerGap,cy=pos.y+roomH-15,showChase=chaseState().active&&(!VIEW_MODE||chaseState().playerVisible),ghost=showChase&&isWhiteGhost(p),escaped=showChase&&isPlayerEscaped(p),bound=showChase&&isPlayerBound(p.id),label=ghost?'白':p.name.slice(0,1),markerFill=escaped?'#98a2b3':p.color,ring=bound?'#b42318':'#fff';marker+=`<circle cx="${cx}" cy="${cy}" r="10" fill="${markerFill}" stroke="${ring}" stroke-width="${bound?3:2}"><title>${esc(ghost?'慕潇（白鬼）':p.name)}${escaped?'（已逃出）':bound?'（白发缠身）':''}</title></circle><text x="${cx}" y="${cy+3.5}" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">${esc(label)}</text>`;});
+      const name=r.name.length>10?r.name.slice(0,9)+'…':r.name;
+      let doorText='';
+      if(r.type==='entrance'||isStairwell(r)) doorText='四向扩展'+(Object.keys(r.doors||{}).length?` · 门：${Object.keys(r.doors).map(dirName).join('、')}`:'');
+      else if(r.hasStairs) doorText='设有上行楼梯 · 非楼梯间';
+      else if(r.entryDir&&r.exitDir) doorText=`入口${dirName(r.entryDir)} · 出口${dirName(r.exitDir)}`;
+      else if(r.entryDir) doorText=`入口${dirName(r.entryDir)} · 出口待定`;
+      else if(r.exitDir) doorText=`出口${dirName(r.exitDir)}`;
+      else doorText=Object.keys(r.doors||{}).length?`门：${Object.keys(r.doors).map(dirName).join('、')}`:'无门（可传送到达）';
+      const selected=selectedPlayer().roomId===r.id;
+      const hairFront=showHair&&chaseState().hairFrontRoomId===r.id;
+      const hairLabel=hairOccupied?`<rect x="${pos.x+roomW-59}" y="${pos.y+7}" width="50" height="15" rx="6" fill="${hairFront?'#7f1d1d':'#b42318'}"/><text x="${pos.x+roomW-34}" y="${pos.y+17.5}" text-anchor="middle" font-size="8" font-weight="800" fill="#fff">${hairFront?'白发前沿':'白发占据'}</text>`:'';
+      tiles+=`<g><rect x="${pos.x}" y="${pos.y}" width="${roomW}" height="${roomH}" rx="12" fill="${fill}" stroke="${selected?'#3677f5':stroke}" stroke-width="${selected?3:1.7}"/><rect x="${pos.x+9}" y="${pos.y+8}" width="4" height="17" rx="2" fill="${stroke}"/><text x="${pos.x+19}" y="${pos.y+20}" font-size="10" fill="#7a879a">${esc(roomTypeLabel(r))}</text>${hairLabel}<text x="${pos.x+roomW/2}" y="${pos.y+45}" text-anchor="middle" font-size="14" font-weight="750" fill="#172033">${esc(name)}</text><text x="${pos.x+roomW/2}" y="${pos.y+61}" text-anchor="middle" font-size="9.5" fill="#7a879a">${esc(doorText)}</text>${marker}<text x="${pos.x+roomW-8}" y="${pos.y+15}" text-anchor="end" font-size="9" fill="#9ba5b5">(${r.x},${r.y})</text></g>`;
+    });
+    const nextBase={w:Math.max(560,width),h:Math.max(340,height)};const baseChanged=mapBase.w!==nextBase.w||mapBase.h!==nextBase.h;mapBase=nextBase;if(baseChanged||mapView.w<=0){mapZoom=1;mapView={x:0,y:0,w:mapBase.w,h:mapBase.h};}
+    container.innerHTML=`<svg role="img" aria-label="第${activeFloor}层房间地图" xmlns="http://www.w3.org/2000/svg" viewBox="${mapView.x} ${mapView.y} ${mapView.w} ${mapView.h}" preserveAspectRatio="xMidYMid meet"><defs><filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#172033" flood-opacity=".08"/></filter></defs>${links}${tiles}</svg>`;
+    applyMapViewport();
+  }
+  function renderLogs(){
+    let logs=state.logs||[];
+    if(VIEW_MODE&&isChaseActive()&&!chaseState().playerVisible){const privateChaseTerms=['追逐战','白鬼','白发','墙中白骨','摧毁','逃出宝塔','束缚','挣脱','救援','d4=','d3='];logs=logs.filter(entry=>!privateChaseTerms.some(term=>String(entry.text||'').toLowerCase().includes(term.toLowerCase())));}
+    $('logCount').textContent=`${logs.length} 条`;
+    if(!logs.length){$('logList').innerHTML='<div class="tiny">还没有移动记录。</div>';return;}
+    $('logList').innerHTML=logs.slice(0,100).map(entry=>{const date=new Date(entry.time);const time=Number.isNaN(date.getTime())?'--:--':date.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});return `<div class="log-item"><div class="log-time">${escapeHtml(time)}</div><div class="log-text">${escapeHtml(String(entry.text||'').replace(/<\/?strong>/g,''))}</div></div>`;}).join('');
+  }
+  function renderVerticalLinks(){
+    const links=state.verticalLinks||[];
+    if(!links.length){$('floorLinks').innerHTML='<div class="tiny">暂未发现跨层楼梯。新建楼梯房间后，选择“上楼”即可建立连接。</div>';return;}
+    $('floorLinks').innerHTML=links.map(link=>{const a=roomById(link.a),b=roomById(link.b);if(!a||!b)return '';return `<div class="link-row"><b>第${a.floor}层「${escapeHtml(a.name)}」</b> ↕ <b>第${b.floor}层「${escapeHtml(b.name)}」</b></div>`;}).join('');
+  }
+  function updateDirectionHelp(){
+    const dir=$('direction').value,room=selectedRoom();if(!room)return;
+    if(DIRS[dir]){
+      if(room.doors?.[dir]){$('roomName').placeholder='目标已有房间，无需填写';message(`该方向已有门，可直接移动到「${roomById(room.doors[dir])?.name||'已有房间'}」，消耗 1 AP。`);return;}
+      $('roomName').placeholder='留空时使用类别作为名称';
+      if(room.floor===5&&!isHubRoom(room))message('第五层普通房间不能水平扩展；只有入口或楼梯间可以四向扩展。');
+      else if(!isHubRoom(room)&&room.exitDir&&room.exitDir!==dir)message(`该房间出口已锁定为${dirName(room.exitDir)}，其他未连接方向视为墙壁。`);
+      else message(`${isHubRoom(room)?'入口 / 楼梯间可以四向扩展。':room.hasStairs?'当前普通房间虽然设有上行楼梯，但不因此获得四向扩展。':'普通房间首次离开时确定唯一出口方向。'}移动或进入已连接房间均消耗 1 AP。`);
+    }else{
+      $('roomName').placeholder='留空时使用房间类别作为名称';
+      const targetFloor=room.floor+(dir==='UP'?1:-1),link=hasVerticalLink(room.id,targetFloor);
+      if(dir==='UP'&&room.isStairwell)message('楼梯间不能继续上楼。请在当前层找到另一个设置了“上行楼梯”的普通房间。','error');
+      else if(dir==='UP'&&!hasUpStairs(room))message('当前房间没有可用的上行楼梯。请在“编辑当前房间”中开启“房间内设有上行楼梯”。','error');
+      else if(dir==='DOWN'&&!link)message('当前房间没有连接到下一层的楼梯。只有已建立楼梯连接的房间能下楼。','error');
+      else if(link)message(`当前楼梯已连接第${targetFloor}层，可跨层移动，消耗 1 AP。`);
+      else message(`上楼将到达第${targetFloor}层的楼梯间。它可以四向扩展，但不能继续向上。消耗 1 AP。`);
+    }
+  }
+  function renderTurn(){
+    const active=selectedPlayer();
+    const chasePublicToThisClient=isChaseActive()&&(!VIEW_MODE||chaseState().playerVisible);
+    $('roundValue').textContent=chasePublicToThisClient?`追逐 ${chaseState().round}`:String(state.round||1);
+    $('turnPlayerValue').textContent=active?.name||'—';
+    $('turnAPValue').textContent=active?`${active.apRemaining}/${active.apPerRound}`:'—';
+    $('turnOrderLabel').textContent='玩家独立行动 · DEX 仅作参考';
+    $('consumeAPBtn').disabled=!active||active.apRemaining<=0;
+    $('endTurnBtn').disabled=!active||active.apRemaining<=0;
+    $('consumeAPBtn').style.opacity=$('consumeAPBtn').disabled?'.5':'1';
+    $('endTurnBtn').style.opacity=$('endTurnBtn').disabled?'.5':'1';
+    $('turnHelp').textContent=active?`当前选中「${active.name}」；本轮剩余 ${active.apRemaining}/${active.apPerRound} AP。每名玩家独立行动。所选玩家 AP 用完后只能结束自己的本轮行动；所有玩家 AP 都为 0 时，自动进入第 ${Number(state.round||1)+1} 轮。`:'请先添加玩家。';
+    if($('sharedRoundValue'))$('sharedRoundValue').textContent=chasePublicToThisClient?`追逐战第 ${chaseState().round} 轮`:`第 ${state.round||1} 轮`;
+    if($('sharedTurnPlayerValue'))$('sharedTurnPlayerValue').textContent=active?.name||'—';
+    if($('sharedTurnAPValue'))$('sharedTurnAPValue').textContent=active?`${active.apRemaining}/${active.apPerRound}`:'—';
+    if($('sharedRoomCountValue'))$('sharedRoomCountValue').textContent=String(state.rooms.length);
+    if($('sharedAPRoster'))$('sharedAPRoster').innerHTML=state.players.map(p=>{
+      const r=roomById(p.roomId),done=p.apRemaining<=0,showChase=chasePublicToThisClient,escaped=showChase&&isPlayerEscaped(p),ghost=showChase&&isWhiteGhost(p),bound=showChase&&isPlayerBound(p.id);
+      const status=escaped?'已逃出宝塔':ghost?'白鬼 · 本体固定':bound?'白发缠身':showChase&&chaseState().bones?.status==='battle'&&chaseState().bones.targetPlayerId===p.id?'白骨战斗中':done?'本轮已结束':'可独立行动';
+      return `<div class="shared-ap-card ${done?'':'current'}"><div class="shared-ap-name">${escapeHtml(p.name)} · ${status}</div><div class="shared-ap-meta">DEX ${Number(p.dex)||0}（仅参考） · AP ${p.apRemaining}/${p.apPerRound}</div><div class="shared-ap-meta">${escapeHtml(r?`第${r.floor}层 · ${r.name}`:'位置未知')}</div></div>`;
+    }).join('');
+  }
+  function renderRoomEditor(){
+    const room=selectedRoom();if(!room){$('roomEdit').innerHTML='<div class="tiny">当前玩家没有有效位置。</div>';return;}
+    const opts=ROOM_CATEGORIES.map(c=>`<option value="${c.value}" ${room.type===c.value?'selected':''}>${c.label}</option>`).join('');
+    $('roomEdit').innerHTML=`<div class="tiny" style="margin-bottom:10px">第${room.floor}层 · 坐标 (${room.x}, ${room.y}) · ${escapeHtml(room.name)}</div><div class="field"><label for="editRoomName">房间名称</label><input id="editRoomName" maxlength="32" value="${escapeHtml(room.name)}" ${room.type==='entrance'?'disabled':''}></div><div class="field"><label for="editRoomType">房间类别</label><select id="editRoomType" ${room.type==='entrance'?'disabled':''}>${opts}</select></div><label class="inline-check"><input id="editRoomHasStairs" type="checkbox" ${room.hasStairs?'checked':''} ${room.type==='entrance'||room.isStairwell?'disabled':''}> 房间内设有上行楼梯（仅可沿梯上楼，不开放四向扩展）</label><label class="inline-check"><input id="editRoomIsStairwell" type="checkbox" ${isStairwell(room)?'checked':''} ${room.type==='entrance'?'disabled':''}> 本房间是楼梯间（四向扩展，但不能继续上楼）</label><button id="saveRoomEditBtn" class="btn btn-soft" style="width:100%">保存房间设置</button>`;
+    $('editRoomHasStairs').addEventListener('change',()=>{if($('editRoomHasStairs').checked)$('editRoomIsStairwell').checked=false;});
+    $('editRoomIsStairwell').addEventListener('change',()=>{if($('editRoomIsStairwell').checked)$('editRoomHasStairs').checked=false;});
+    $('saveRoomEditBtn').addEventListener('click',()=>{
+      if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}
+      const name=$('editRoomName').value.trim()||categoryLabel($('editRoomType').value);
+      pushUndo();if(room.type!=='entrance'){room.name=name;room.type=$('editRoomType').value;room.isStairwell=$('editRoomIsStairwell').checked;room.hasStairs=$('editRoomHasStairs').checked&&!room.isStairwell;}
+      save();render();message(room.type==='entrance'?'入口设置已保留。':'房间类别与楼梯设置已更新。','success');
+    });
+  }
+  function render(){
+    if(state.horseRide?.active&&state.players.some(p=>p.id===state.horseRide.playerId))selectedPlayerId=state.horseRide.playerId;
+    renderPlayers();renderFloorTabs();renderMap();renderLogs();renderVerticalLinks();renderTurn();renderRoomEditor();renderChaseUI();renderHorseStatus();
+    $('undoBtn').disabled=undoStack.length===0;$('undoBtn').style.opacity=undoStack.length===0?'.5':'1';updateDirectionHelp();
+  }
+  function coordinateInputs(){
+    const floor=Math.floor(Number($('coordFloor').value)),x=Number($('coordX').value),y=Number($('coordY').value);
+    if(!Number.isInteger(floor)||floor<1||floor>5||!Number.isInteger(x)||!Number.isInteger(y)||Math.abs(x)>99||Math.abs(y)>99)throw new Error('楼层必须为 1–5 的整数，X/Y 必须为 -99 到 99 的整数。');
+    return {floor,x,y};
+  }
+  function selectedCoordCategory(){
+    if($('coordRandomType').checked)return ROOM_CATEGORIES[Math.floor(Math.random()*ROOM_CATEGORIES.length)].value;
+    return $('coordRoomType').value||'empty';
+  }
+  function buildCoordRoom({floor,x,y,randomType=true}){
+    if(roomAt(floor,x,y))throw new Error(`第${floor}层坐标 (${x}, ${y}) 已有房间。`);
+    if(floor===5&&state.rooms.some(r=>r.floor===5))throw new Error('第五层只有一个房间“塔顶”，不能在顶层另外创建房间。');
+    const type=randomType?ROOM_CATEGORIES[Math.floor(Math.random()*ROOM_CATEGORIES.length)].value:$('coordRoomType').value||'empty';
+    const name=floor===5?'塔顶':($('coordRoomName').value.trim()||categoryLabel(type));
+    const isStairwell=floor!==5&&$('coordIsStairwell').checked;return addRoom({floor,x,y,name,type,hasStairs:$('coordHasStairs').checked&&!isStairwell&&floor!==5,isStairwell,entryDir:null,exitDir:null});
+  }
+  $('createCoordRoomBtn').addEventListener('click',()=>{
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}
+    try{const pos=coordinateInputs();if(roomAt(pos.floor,pos.x,pos.y))throw new Error(`第${pos.floor}层坐标 (${pos.x}, ${pos.y}) 已有房间。`);
+      if(pos.floor===5&&state.rooms.some(r=>r.floor===5))throw new Error('第五层只有一个房间“塔顶”，不能在顶层另外创建房间。');
+      pushUndo();const room=buildCoordRoom({...pos,randomType:$('coordRandomType').checked});activeFloor=pos.floor;
+      addLog(`GM 在第${pos.floor}层坐标 (${pos.x}, ${pos.y}) 创建房间「${room.name}」（${categoryLabel(room.type)}${room.isStairwell?'，楼梯间':room.hasStairs?'，内设上行楼梯':''}）。`);
+      $('coordRoomName').value='';$('coordHasStairs').checked=false;$('coordIsStairwell').checked=false;save();render();message(`已在第${pos.floor}层 (${pos.x}, ${pos.y}) 建立「${room.name}」。`,'success');
+    }catch(err){message(err.message||'创建房间失败。','error');}
+  });
+  $('teleportBtn').addEventListener('click',()=>{
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}
+    const player=selectedPlayer();if(!assertCurrentTurn(player))return;
+    try{
+      const pos=coordinateInputs();let target=roomAt(pos.floor,pos.x,pos.y);
+      if(isChaseActive()){
+        if(isPlayerBound(player.id)){throw new Error(`「${player.name}」被白发缠身，无法使用传送法宝。`);}
+        if(chaseState().bones?.status==='battle'&&chaseState().bones.targetPlayerId===player.id)throw new Error(`「${player.name}」正在与墙中白骨战斗，不能传送。`);
+        if(!target)throw new Error('追逐战地图已经冻结，只能传送到已经探索的房间，不能在追逐过程中创建新房间。');
+        pushUndo();const source=roomById(player.roomId);player.roomId=target.id;activeFloor=target.floor;
+        addLog(`${escapeHtml(player.name)} 使用传送法宝，从「${escapeHtml(source?.name||'未知位置')}」传送到第${target.floor}层「${escapeHtml(target.name)}」(${target.x}, ${target.y})。`);
+        consumeActionPoint(player,'使用传送法宝',()=>{if(isHairOccupied(target.id))bindPlayer(player.id,'传送进入白发占据的房间');else if(target.floor===1&&target.type==='entrance')markPlayerEscaped(player,'传送抵达第一层入口');});
+        save();render();message(isPlayerEscaped(player)?`「${player.name}」已从第一层入口逃离宝塔！`:`「${player.name}」已传送至第${target.floor}层「${target.name}」，消耗 1 AP。`,'success');return;
+      }
+      if(!target&&!$('teleportCreateIfMissing').checked)throw new Error('目标坐标没有房间。请勾选“目标不存在时自动创建随机房间”，或先建立房间。');
+      if(!target&&pos.floor===5&&state.rooms.some(r=>r.floor===5))throw new Error('第五层只有一个房间“塔顶”，不能在顶层另外创建房间。');
+      pushUndo();
+      if(!target){
+        target=buildCoordRoom({...pos,randomType:$('coordRandomType').checked});
+        addLog(`传送目标不存在，自动创建「${target.name}」（${categoryLabel(target.type)}）。`);
+      }
+      const source=roomById(player.roomId);player.roomId=target.id;activeFloor=target.floor;triggerChaseIfNeeded(player,target);
+      addLog(`<strong>${escapeHtml(player.name)}</strong> 使用传送法宝，从「${escapeHtml(source?.name||'未知位置')}」传送到第${target.floor}层「${escapeHtml(target.name)}」(${target.x}, ${target.y})。`);
+      consumeActionPoint(player,'使用传送法宝');$('coordRoomName').value='';save();render();message(`「${player.name}」已传送至第${target.floor}层「${target.name}」，消耗 1 AP。`,'success');
+    }catch(err){message(err.message||'传送失败。','error');}
+  });
+  $('consumeAPBtn').addEventListener('click',()=>{
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}const player=selectedPlayer();if(!assertCurrentTurn(player))return;
+    pushUndo();consumeActionPoint(player,'使用其他道具 / 执行其他行动');save();render();message(`已消耗 1 AP。`,'success');
+  });
+  $('endTurnBtn').addEventListener('click',()=>{
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}const player=selectedPlayer();if(!assertCurrentTurn(player))return;
+    pushUndo();const remaining=player.apRemaining;player.apRemaining=0;state.currentPlayerId=player.id;
+    addLog(`${player.name} 提前结束本轮行动，放弃剩余 ${remaining} AP。`);
+    const boundary=handleActionRoundBoundary();
+    selectedPlayerId=player.id;const r=roomById(player.roomId);if(r)activeFloor=r.floor;
+    save();render();message(boundary==='chase-ready'?'本轮行动已全部结束，地图已冻结；请 GM 手动开启追逐战。':boundary==='ghost-turn'?'所有玩家已结束行动，轮到白鬼。':boundary==='round-advanced'?`所有玩家均结束本轮，已进入第 ${state.round} 轮。`:`「${player.name}」已结束自己的本轮行动。其他仍有 AP 的玩家可以继续独立行动。`,'success');
+  });
+  function addPlayer(){
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}
+    const entrance=state.rooms.find(r=>r.type==='entrance') || state.rooms.find(r=>r.floor===1) || state.rooms[0];
+    if(!entrance){message('地图中没有可供新玩家加入的起始房间。','error');return;}
+    let index=1; while(state.players.some(p=>p.id==='p'+index)) index++;
+    const player={id:'p'+index,name:'玩家'+index,dex:50,color:COLORS[state.players.length%COLORS.length],roomId:entrance.id,apPerRound:2,apRemaining:2};
+    pushUndo(); state.players.push(player); selectedPlayerId=player.id; activeFloor=entrance.floor;
+    addLog(`<strong>${escapeHtml(player.name)}</strong> 加入游戏，初始位置为第${entrance.floor}层「${escapeHtml(entrance.name)}」。`);
+    save(); render(); message(`已添加「${player.name}」，当前共 ${state.players.length} 名玩家。`,'success');
+  }
+  function removeSelectedPlayer(){
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，请先停止骑行。','error');return;}
+    if(state.players.length<=1){message('至少需要保留一名玩家。','error');return;}
+    const player=selectedPlayer(); if(!player)return;
+    if(!confirm(`确定删除玩家「${player.name}」吗？该玩家将从列表和地图标记中移除，但已探索的房间不会删除。`))return;
+    pushUndo();state.players=state.players.filter(p=>p.id!==player.id);
+    addLog(`<strong>${escapeHtml(player.name)}</strong> 已从玩家列表中删除；地图房间保留。`);
+    handleActionRoundBoundary();
+    selectedPlayerId=state.players.some(p=>p.id===selectedPlayerId)?selectedPlayerId:state.players[0].id;state.currentPlayerId=selectedPlayerId;const r=roomById(selectedPlayer().roomId);if(r)activeFloor=r.floor;
+    save(); render(); message(`已删除玩家「${player.name}」，地图房间已保留。`,'success');
+  }
+  $('addPlayerBtn').addEventListener('click',addPlayer);
+  $('removePlayerBtn').addEventListener('click',removeSelectedPlayer);
+  $('moveBtn').addEventListener('click',movePlayer);
+  $('mountHorseBtn').addEventListener('click',mountHorse);
+  $('startHorseRideBtn').addEventListener('click',startHorseRide);
+  $('horseMoveBtn').addEventListener('click',advanceHorseRide);
+  $('stopHorseRideBtn').addEventListener('click',stopHorseRide);
+  $('direction').addEventListener('change',()=>{updateDirectionHelp();updateChaseDownStairOptions();});
+  $('chaseDownStairSelect').addEventListener('change',()=>{if(isChaseActive())message(`已选择第${Number(chaseMapRoomById($('chaseDownStairSelect').value)?.floor)||'?'}层的下楼目标。`);});
+  function refreshRescueControls(){
+    const isNpc=$('rescueHelperSelect').value==='__npc__';$('rescueNpcRow').hidden=!isNpc;
+    const hasTarget=!!$('rescueTargetSelect').value;
+    const helper=state.players.find(p=>p.id===$('rescueHelperSelect').value);
+    const helperValid=!!helper&&!isWhiteGhost(helper)&&!isPlayerEscaped(helper)&&!isPlayerBound(helper.id)&&helper.apRemaining>0;
+    $('rescueBoundBtn').disabled=!hasTarget||(!isNpc&&!helperValid)||!isChaseActive()||!!chaseState().awaitingGhostAction||!!chaseState().ghostTurnStarted;
+  }
+  $('rescueHelperSelect').addEventListener('change',refreshRescueControls);
+  $('rescueTargetSelect').addEventListener('change',refreshRescueControls);
+  $('roomType').addEventListener('change',updateDirectionHelp);
+  $('roomHasStairs').addEventListener('change',()=>{if($('roomHasStairs').checked)$('roomIsStairwell').checked=false;});
+  $('roomIsStairwell').addEventListener('change',()=>{if($('roomIsStairwell').checked)$('roomHasStairs').checked=false;});
+  $('coordHasStairs').addEventListener('change',()=>{if($('coordHasStairs').checked)$('coordIsStairwell').checked=false;});
+  $('coordIsStairwell').addEventListener('change',()=>{if($('coordIsStairwell').checked)$('coordHasStairs').checked=false;});
+  $('undoBtn').addEventListener('click',()=>{
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，不能撤销中途状态；请先停止骑行。','error');return;}
+    if(!undoStack.length){message('没有可撤销的移动记录。');return;}
+    state=undoStack.pop(); const current=selectedPlayer(); if(current){const r=roomById(current.roomId);if(r)activeFloor=r.floor;}
+    message('已撤销上一步操作，地图恢复到之前的状态。','success');save();render();
+  });
+  $('switchFloorBtn').addEventListener('click',()=>{const r=selectedRoom();if(r){activeFloor=r.floor;render();}});
+  $('resetBtn').addEventListener('click',()=>{
+    if(!canManage())return;if(currentHorseRide().active){message('骑马路线尚未结算，不能重置地图。请先停止骑行。','error');return;}
+    if(!confirm('确定重置整张宝塔地图吗？这会清除房间、移动记录和撤销历史。建议先导出 JSON 备份。'))return;
+    pushUndo(); state=makeInitialState();selectedPlayerId='p1';activeFloor=1;undoStack=[];save();render();message('地图已重置，所有玩家回到第一层入口。','success');
+  });
+  $('exportBtn').addEventListener('click',()=>{
+    const payload={exportedAt:new Date().toISOString(),state,undoStack};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='baota-map-backup.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  });
+  $('importBtn').addEventListener('click',()=>{if(currentHorseRide().active){message('骑马路线尚未结算，不能导入覆盖地图。请先停止骑行。','error');return;}$('importFile').click();});
+  $('importFile').addEventListener('change',async event=>{
+    if(currentHorseRide().active){message('骑马路线尚未结算，不能导入覆盖地图。请先停止骑行。','error');event.target.value='';return;}
+    if(!canManage()){event.target.value='';return;}
+    const file=event.target.files?.[0];if(!file)return;
+    try{
+      const parsed=JSON.parse(await file.text()),incoming=parsed.state||parsed;
+      if(!incoming||!Array.isArray(incoming.rooms)||!Array.isArray(incoming.players)||!incoming.rooms.some(r=>r.floor===1&&r.name==='入口'))throw new Error('文件格式不正确或缺少入口房间。');
+      if(incoming.players.length<1)throw new Error('地图文件至少需要包含一名玩家。');
+      if(incoming.players.some(p=>!p||!p.id||!String(p.name||'').trim()||!p.roomId||!incoming.rooms.some(r=>r.id===p.roomId)))throw new Error('玩家数据不完整，或存在无法定位的玩家。');
+      state=normalizeState(incoming);undoStack=Array.isArray(parsed.undoStack)?parsed.undoStack:[];selectedPlayerId=state.players[0].id;state.currentPlayerId=selectedPlayerId;activeFloor=1;save();render();message(`地图 JSON 导入成功，共导入 ${state.players.length} 名玩家。`,'success');
+    }catch(err){message('导入失败：'+(err.message||'文件无法读取'),'error');}
+    event.target.value='';
+  });
+  function setCloudStatus(text,kind='info'){
+    const el=$('cloudStatus');if(!el)return;el.textContent=text;
+    el.style.background=kind==='error'?'#fff0f0':kind==='ok'?'#ecfdf3':'#f2f4f7';
+    el.style.color=kind==='error'?'#b42318':kind==='ok'?'#067647':'#475467';
+  }
+  function canManage(){
+    if(VIEW_MODE||!canEdit){message('当前页面为只读模式。请使用 GM 页面，并以已授权的 CloudBase 账号登录。','error');return false;}
+    if(chaseState().mapLocked&&!chaseState().active&&!chaseState().completed){message('攀塔地图已经冻结，等待 GM 手动开启追逐战。请勿再修改探索地图。','error');return false;}
+    return true;
+  }
+  function updateAccessUI(){
+    canEdit=!VIEW_MODE && (mapMode==='static' || (!!cloudUser && !!trustedGMUid && cloudUser.id===trustedGMUid));
+    document.body.classList.toggle('viewer',VIEW_MODE);
+    document.body.classList.toggle('static-mode',mapMode==='static'&&!VIEW_MODE);
+    document.body.classList.toggle('dynamic-mode',mapMode==='dynamic');
+    document.body.classList.toggle('readonly',VIEW_MODE||(!canEdit&&mapMode!=='static'));
+    const sharedPanel=$('sharedTurnPanel');
+    if(sharedPanel){sharedPanel.hidden=!VIEW_MODE;sharedPanel.style.display=VIEW_MODE?'block':'none';}
+    $('cloudControl').style.display=(VIEW_MODE||mapMode!=='dynamic')?'none':'';
+    $('modeBadge').textContent=VIEW_MODE?'动态地图 · 只读':mapMode==='static'?'静态地图 · 本机保存':mapMode==='dynamic'?'动态地图 · 云端同步':'选择地图模式';
+    $('toggleModeBtn').textContent=mapMode==='static'?'切换为动态地图':mapMode==='dynamic'?'切换为静态地图':'选择地图模式';
+    $('cloudLogin').hidden=!cloudConfigured||!!cloudUser;
+    $('cloudSession').hidden=!cloudUser;
+    $('cloudLogoutBtn').hidden=!cloudUser;
+    $('shareViewerBtn').hidden=!canEdit;
+    $('cloudCurrentUid').textContent=cloudUser?.id||'尚未登录';
+    if(cloudUser && !$('cloudTrustedUid').value) $('cloudTrustedUid').value=cloudUser.id;
+    $('cloudLoginBtn').disabled=!cloudConfigured;
+    if(mapMode==='static'&&!VIEW_MODE){setCloudStatus('静态地图已启用 · 数据只保存在本浏览器','ok');$('autosaveText').textContent='静态地图 · 本机保存';}
+    else if(VIEW_MODE){setCloudStatus('只读观看 · 正在连接地图数据','info');}
+    else if(canEdit){setCloudStatus('GM 已授权 · 可以编辑地图','ok');$('cloudSetupHelp').textContent='GM 编辑权限已在本浏览器启用。请确认 CloudBase 数据库安全规则也已限制只有该 UID 可以写入。';maybeInitializeRemoteMap();}
+    else if(cloudUser){setCloudStatus('账号已登录，但未登记为本浏览器 GM','info');$('cloudSetupHelp').textContent='请确认当前账号 UID 与数据库安全规则中的 GM UID 一致，再将上方当前账号 UID 填入“本浏览器的 GM UID”。';}
+    else if(cloudConfigured){setCloudStatus('云端已配置，请 GM 登录','info');}
+    else{setCloudStatus('请先配置 CloudBase 环境和 Publishable Key','info');}
+    renderChaseUI();
+  }
+  function fillConfigInputs(){
+    $('cloudEnvId').value=cloudConfig.envId||DEFAULT_ENV_ID;
+    $('cloudRegion').value=cloudConfig.region||'ap-shanghai';
+    $('cloudCollection').value=cloudConfig.collection||'baota_maps';
+    $('cloudAccessKey').value=cloudConfig.accessKey||'';
+  }
+  function currentConfigFromForm(){
+    return {envId:$('cloudEnvId').value.trim(),region:$('cloudRegion').value,collection:$('cloudCollection').value.trim(),accessKey:$('cloudAccessKey').value.trim()};
+  }
+  function applyCloudState(docData){
+    if(!docData||!docData.state||!Array.isArray(docData.state.rooms)||!Array.isArray(docData.state.players))return false;
+    const incomingState=normalizeState(clone(docData.state)), incomingUndo=Array.isArray(docData.undoStack)?docData.undoStack:[];
+    const changed=JSON.stringify(state)!==JSON.stringify(incomingState)||JSON.stringify(undoStack)!==JSON.stringify(incomingUndo);
+    cloudDocExists=true;cloudDocKnown=true;cloudReady=true;
+    if(changed){
+      applyingRemote=true;
+      state=clone(incomingState);undoStack=clone(incomingUndo);
+      if(VIEW_MODE&&state.players.some(p=>p.id===state.currentPlayerId))selectedPlayerId=state.currentPlayerId;
+      else if(!state.players.some(p=>p.id===selectedPlayerId))selectedPlayerId=state.players[0]?.id||'p1';
+      const selected=selectedPlayer(), room=selected?roomById(selected.roomId):null;
+      if(room)activeFloor=room.floor;
+      try{if(!VIEW_MODE)localStorage.setItem(STORAGE_KEY,JSON.stringify({state,undoStack}));}catch(e){}
+      render();
+      applyingRemote=false;
+    }
+    $('autosaveText').textContent=VIEW_MODE?'只读观看 · 已连接实时地图':'云端地图已加载';
+    setCloudStatus('实时同步中 · 地图已更新','ok');
+    return true;
+  }
+  async function maybeInitializeRemoteMap(){
+    if(seedingMap||!cloudReady||!cloudDocKnown||cloudDocExists||!canEdit||!cloudMapDoc)return;
+    seedingMap=true;
+    try{
+      const backup=loadSaved();
+      if(backup?.rooms?.length&&backup?.players?.length){state=backup;}
+      const result=await cloudMapDoc.set({state:clone(state),undoStack:clone(undoStack),updatedAt:new Date().toISOString(),updatedBy:cloudUser.id});
+      if(result?.error)throw new Error(result.error.message||'创建地图失败');
+      if(result?.code)throw new Error(result.message||result.code);
+      cloudDocExists=true;
+      $('autosaveText').textContent='初始地图已保存到云端';
+      setCloudStatus('云端地图已初始化','ok');
+    }catch(err){
+      setCloudStatus('初始化地图失败：'+(err?.message||'请检查集合和安全规则'),'error');
+      $('autosaveText').textContent='云端初始化失败';
+      console.error('CloudBase map initialization failed:',err);
+    }finally{seedingMap=false;}
+  }
+  async function connectCloudBase(config){
+    if(!config.envId||!config.collection||!config.accessKey){
+      cloudConfigured=false;cloudReady=false;updateAccessUI();
+      setCloudStatus('请填写环境 ID、集合名称和 Publishable Key','error');
+      return;
+    }
+    try{
+      if(cloudWatcher?.close)try{await cloudWatcher.close();}catch(e){}
+      if(authSubscription?.data?.subscription?.unsubscribe)authSubscription.data.subscription.unsubscribe();
+      cloudConfig=config;
+      cloudUser=null;canEdit=false;
+      document.body.classList.add('readonly');
+      localStorage.setItem(CLOUD_CONFIG_KEY,JSON.stringify(cloudConfig));
+      if(!window.cloudbase)throw new Error('CloudBase SDK 没有加载。请检查网络或 SDK CDN 是否可访问。');
+      cloudApp=window.cloudbase.init({env:config.envId,region:config.region||'ap-shanghai',accessKey:config.accessKey});
+      cloudAuth=cloudApp.auth;
+      cloudDb=cloudApp.database();
+      cloudMapDoc=cloudDb.collection(config.collection).doc(MAP_DOCUMENT_ID);
+      cloudConfigured=true;cloudReady=false;cloudDocKnown=false;cloudDocExists=false;seedingMap=false;
+      setCloudStatus('正在连接数据库和实时监听…','info');
+      authSubscription=cloudAuth.onAuthStateChange((event,session,info)=>{
+        if(info?.error){setCloudStatus('认证状态异常：'+info.error.message,'error');return;}
+        if(event==='INITIAL_SESSION'||event==='SIGNED_IN'||event==='SIGNED_OUT'||event==='TOKEN_REFRESHED'){
+          cloudUser=session?.user||null;
+          updateAccessUI();
+          maybeInitializeRemoteMap();
+        }
+      });
+      cloudWatcher=cloudMapDoc.watch({
+        onChange:(snapshot)=>{
+          const rawDocs=snapshot?.docs;
+          let docs=[];
+          if(Array.isArray(rawDocs)) docs=rawDocs;
+          else if(rawDocs&&typeof rawDocs==='object') docs=rawDocs.state?[rawDocs]:Object.values(rawDocs).filter(v=>v&&typeof v==='object');
+          const docData=docs.find(d=>d&&d.state)||docs.find(d=>d&&d._id===MAP_DOCUMENT_ID)||snapshot?.doc||(snapshot?.data?.state?snapshot.data:null);
+          cloudDocKnown=true;cloudReady=true;
+          if(docData&&applyCloudState(docData)){
+            cloudDocExists=true;
+            if(canEdit)maybeInitializeRemoteMap();
+          }else{
+            cloudDocExists=false;
+            if(VIEW_MODE){setCloudStatus('尚无已发布地图，请稍后重试或通知 GM 初始化地图','info');$('autosaveText').textContent='等待 GM 创建初始地图';}
+            else{setCloudStatus('数据库已连接，等待 GM 初始化地图','info');$('autosaveText').textContent='等待云端地图初始化';maybeInitializeRemoteMap();}
+          }
+        },
+        onError:(err)=>{
+          setCloudStatus('实时监听失败：'+(err?.message||'请检查安全来源、集合权限和 SDK 配置'),'error');
+          $('autosaveText').textContent='实时监听异常';console.error('CloudBase watch error:',err);
+        }
+      });
+      updateAccessUI();
+    }catch(err){
+      cloudConfigured=false;cloudReady=false;
+      setCloudStatus('连接失败：'+(err?.message||'请检查配置'),'error');
+      console.error('CloudBase initialization failed:',err);
+    }
+  }
+  $('saveCloudConfigBtn').addEventListener('click',()=>{
+    const config=currentConfigFromForm();
+    if(!config.envId||!config.collection||!config.accessKey){setCloudStatus('环境 ID、集合名称和 Publishable Key 均为必填项','error');return;}
+    connectCloudBase(config);
+  });
+  $('cloudLoginBtn').addEventListener('click',async()=>{
+    if(!cloudAuth){setCloudStatus('请先保存 CloudBase 配置并连接','error');return;}
+    const account=$('cloudLoginAccount').value.trim(),password=$('cloudLoginPassword').value;
+    if(!account||!password){setCloudStatus('请输入 GM 账号和密码','error');return;}
+    $('cloudLoginBtn').disabled=true;$('cloudLoginBtn').textContent='登录中…';
+    try{
+      let creds;
+      if(account.includes('@'))creds={email:account,password};
+      else if(/^\+?[0-9\-() ]{6,}$/.test(account))creds={phone:account,password};
+      else creds={username:account,password};
+      const result=await cloudAuth.signInWithPassword(creds);
+      if(result?.error)throw new Error(result.error.message||'登录失败');
+      cloudUser=result?.data?.user||result?.data?.session?.user||null;
+      $('cloudLoginPassword').value='';
+      updateAccessUI();
+      if(cloudUser){$('cloudCurrentUid').textContent=cloudUser.id||'未返回 UID';$('cloudTrustedUid').value=cloudUser.id||'';setCloudStatus('登录成功。请先配置数据库 GM UID 规则，再登记本浏览器 GM 身份。','ok');}
+      maybeInitializeRemoteMap();
+    }catch(err){setCloudStatus('GM 登录失败：'+(err?.message||'请检查账号密码及登录方式设置'),'error');console.error(err);}
+    finally{$('cloudLoginBtn').disabled=false;$('cloudLoginBtn').textContent='GM 登录';}
+  });
+  $('trustGmBtn').addEventListener('click',()=>{
+    if(!cloudUser?.id){setCloudStatus('请先登录 GM 账号','error');return;}
+    const supplied=$('cloudTrustedUid').value.trim();
+    if(supplied!==cloudUser.id){setCloudStatus('输入的 GM UID 必须与当前登录账号 UID 完全一致','error');return;}
+    try{localStorage.setItem(TRUSTED_GM_KEY,supplied);trustedGMUid=supplied;updateAccessUI();render();setCloudStatus('已将当前账号登记为本浏览器 GM；云端规则仍需单独限制写权限','ok');maybeInitializeRemoteMap();}
+    catch(err){setCloudStatus('无法保存 GM 身份，请检查浏览器本地存储权限','error');}
+  });
+  $('copyUidBtn').addEventListener('click',async()=>{
+    const uid=cloudUser?.id||'';if(!uid)return;
+    try{await navigator.clipboard.writeText(uid);setCloudStatus('已复制 GM UID，请粘贴到数据库安全规则','ok');}
+    catch(e){window.prompt('复制以下 GM UID：',uid);}
+  });
+  $('shareViewerBtn').addEventListener('click',async()=>{
+    if(!canEdit||!cloudConfig?.accessKey){setCloudStatus('请先完成 GM 授权和云端配置','error');return;}
+    const url=new URL(window.location.href);url.search='';url.hash='';
+    // 玩家配置已内置在页面中，分享链接只需要声明只读视图和动态模式。
+    url.searchParams.set('view','1');url.searchParams.set('mode','dynamic');
+    try{await navigator.clipboard.writeText(url.toString());setCloudStatus('短版玩家只读链接已复制，可以发给玩家','ok');}
+    catch(e){window.prompt('复制玩家只读链接并发给玩家：',url.toString());}
+  });
+  $('cloudLogoutBtn').addEventListener('click',async()=>{
+    try{const result=await cloudAuth?.signOut();if(result?.error)throw new Error(result.error.message);cloudUser=null;updateAccessUI();setCloudStatus('已退出 GM 登录','info');}
+    catch(err){setCloudStatus('退出登录失败：'+(err?.message||''),'error');}
+  });
+
+  $('startChaseBtn').addEventListener('click',startChase);
+  $('toggleChaseNoticeBtn').addEventListener('click',toggleChaseNotice);
+  $('finishChaseBtn').addEventListener('click',finishChase);
+  $('rollGhostActionsBtn').addEventListener('click',startGhostTurn);
+  $('spreadHairBtn').addEventListener('click',spreadHair);
+  $('ghostAttackBtn').addEventListener('click',ghostAttack);
+  $('endGhostTurnBtn').addEventListener('click',finishGhostTurn);
+  $('breakFreeSuccessBtn').addEventListener('click',()=>recordStrengthCheck(true));
+  $('breakFreeFailBtn').addEventListener('click',()=>recordStrengthCheck(false));
+  $('rescueBoundBtn').addEventListener('click',rescueBoundPlayer);
+  $('rollBonesBtn').addEventListener('click',rollWallBones);
+  $('bonesDodgeBtn').addEventListener('click',()=>resolveWallBones('dodged'));
+  $('bonesFailBtn').addEventListener('click',()=>resolveWallBones('failed'));
+  $('resolveBonesBtn').addEventListener('click',resolveBonesCombat);
+  $('destroyFloorBtn').addEventListener('click',declareFloorDestroyed);
+
+  function showModeChooser(){ if(currentHorseRide().active){message('骑马路线尚未结算，暂不能切换地图模式。请先停止骑行。','error');return;} $('modeChooser').hidden=false; $('modeChooser').style.display='grid'; }
+  function hideModeChooser(){ $('modeChooser').hidden=true; $('modeChooser').style.display='none'; }
+  function closeCloudWatch(){
+    try{if(cloudWatcher?.close)cloudWatcher.close();else if(cloudWatcher?.unsubscribe)cloudWatcher.unsubscribe();}catch(e){}
+    try{if(authSubscription?.data?.subscription?.unsubscribe)authSubscription.data.subscription.unsubscribe();}catch(e){}
+    cloudWatcher=null;authSubscription=null;cloudReady=false;cloudDocKnown=false;cloudDocExists=false;cloudConfigured=false;cloudMapDoc=null;cloudDb=null;cloudAuth=null;cloudApp=null;
+  }
+  function activateMode(mode){
+    if(VIEW_MODE){mapMode='dynamic';hideModeChooser();updateAccessUI();return;}
+    if(mode!=='static'&&mode!=='dynamic')return;
+    mapMode=mode;try{localStorage.setItem(MAP_MODE_KEY,mode);}catch(e){}
+    hideModeChooser();
+    if(mode==='static'){
+      closeCloudWatch();
+      state=normalizeState(loadSaved()||makeInitialState());selectedPlayerId=state.players[0]?.id||'p1';activeFloor=roomById(selectedPlayer()?.roomId)?.floor||1;
+      canEdit=true;cloudUser=null;document.body.classList.add('static-mode');document.body.classList.remove('dynamic-mode','readonly','viewer');
+      updateAccessUI();render();$('autosaveText').textContent='静态地图 · 本机保存';setCloudStatus('静态地图已启用 · 不会自动推送到 PL 端','ok');return;
+    }
+    document.body.classList.remove('static-mode');document.body.classList.add('dynamic-mode');canEdit=false;
+    updateAccessUI();
+    if(cloudConfig.accessKey)connectCloudBase(cloudConfig);
+    else{setCloudStatus('动态地图已选择，请填写 CloudBase 环境、集合和 Publishable Key','info');$('cloudEnvId').focus();}
+  }
+  $('chooseStaticMode').addEventListener('click',()=>activateMode('static'));
+  $('chooseDynamicMode').addEventListener('click',()=>activateMode('dynamic'));
+  $('toggleModeBtn').addEventListener('click',showModeChooser);
+  $('mapZoomOutBtn').addEventListener('click',()=>setMapZoom(mapZoom-MAP_ZOOM_STEP));
+  $('mapZoomInBtn').addEventListener('click',()=>setMapZoom(mapZoom+MAP_ZOOM_STEP));
+  $('mapZoomResetBtn').addEventListener('click',resetMapViewport);
+  $('mapZoomFitBtn').addEventListener('click',fitMapZoom);
+  bindMapViewport();
+  fillConfigInputs();
+  fillCategorySelect('roomType');fillCategorySelect('coordRoomType');fillCategorySelect('horseNextRoomType');
+  render();
+  if(VIEW_MODE){
+    mapMode='dynamic';document.body.classList.add('viewer','readonly','dynamic-mode');
+    const sharedPanel=$('sharedTurnPanel');if(sharedPanel){sharedPanel.hidden=false;sharedPanel.style.display='block';}
+    $('autosaveText').textContent='只读观看 · 正在连接云端地图';hideModeChooser();
+    if(cloudConfig.accessKey)connectCloudBase(cloudConfig);
+    else setCloudStatus('网页内置的只读访问配置不完整，请检查部署版本','error');
+  }else if(mapMode==='static'){
+    document.body.classList.add('static-mode');updateAccessUI();hideModeChooser();
+    state=normalizeState(loadSaved()||state);selectedPlayerId=state.players[0]?.id||'p1';render();
+  }else if(mapMode==='dynamic'){
+    document.body.classList.add('dynamic-mode');updateAccessUI();hideModeChooser();
+    if(cloudConfig.accessKey)connectCloudBase(cloudConfig);
+    else setCloudStatus('动态地图已选择，请填写 CloudBase 环境、集合和 Publishable Key','info');
+  }else{
+    document.body.classList.add('readonly');showModeChooser();
+  }
+})();
+</script>
+<script>
+/* v1.2.6 bottom panels: equal height determined by the shorter side. */
+(function(){
+  const DESIRED_LOG_VIEW=260;
+  let raf=0;
+  function syncBottomPanels(){
+    cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(()=>{
+      const grid=document.querySelector('.bottom-grid');
+      if(!grid)return;
+      const panels=grid.querySelectorAll(':scope > section.panel');
+      if(panels.length<2)return;
+      const left=panels[0], right=panels[1];
+      left.style.height=''; right.style.height='';
+      const leftHead=left.querySelector('.panel-head'), leftBody=left.querySelector('.panel-body');
+      const rightHead=right.querySelector('.panel-head'), rightBody=right.querySelector('.panel-body');
+      const log=left.querySelector('.log-list');
+      if(!leftHead||!leftBody||!rightHead||!rightBody||!log)return;
+      if(matchMedia('(max-width:760px)').matches){
+        leftBody.style.height=''; rightBody.style.height=''; log.style.height='';
+        return;
+      }
+      // Left preferred height is a compact log viewport, not the full height of all 100 records.
+      const leftStyle=getComputedStyle(leftBody);
+      const leftChrome=leftHead.getBoundingClientRect().height + parseFloat(leftStyle.paddingTop||0) + parseFloat(leftStyle.paddingBottom||0);
+      const leftPreferred=Math.ceil(leftChrome + Math.min(DESIRED_LOG_VIEW, Math.max(1,log.scrollHeight)));
+      // Right natural height is measured from its complete stair-link content.
+      const rightNatural=Math.ceil(rightHead.getBoundingClientRect().height + rightBody.scrollHeight);
+      const common=Math.max(110,Math.min(leftPreferred,rightNatural));
+      left.style.height=common+'px'; right.style.height=common+'px';
+      const lh=leftHead.getBoundingClientRect().height, rh=rightHead.getBoundingClientRect().height;
+      leftBody.style.height=Math.max(0,common-lh)+'px';
+      rightBody.style.height=Math.max(0,common-rh)+'px';
+      log.style.height='100%';
+    });
+  }
+  window.addEventListener('resize',syncBottomPanels,{passive:true});
+  const start=()=>{
+    const grid=document.querySelector('.bottom-grid');
+    if(!grid)return;
+    const mo=new MutationObserver(syncBottomPanels);
+    mo.observe(grid,{subtree:true,childList:true,characterData:true});
+    syncBottomPanels();
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
+</body>
+</html>
